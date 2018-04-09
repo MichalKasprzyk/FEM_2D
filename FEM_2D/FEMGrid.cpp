@@ -21,7 +21,7 @@ void FEMGrid::generate_Dx_Dksi()
 	getNode_2D(2)->print();
 	getNode_2D(3)->print();
 
-	// Mozliwie zmienic kolejnosc punktow dodawanych w sensie 1 6 7 2 zamiast 1 2 6 7 
+	// Possibly change order of points being added, from 1 6 7 2 to 1 2 6 7, not sure though..
 	jacobian->initDx_DEta(getNode_2D(0)->getX(), getNode_2D(1)->getX(), getNode_2D(2)->getX(), getNode_2D(3)->getX());
 	jacobian->printDx_DEta();
 	jacobian->initDx_DKsi(getNode_2D(0)->getX(), getNode_2D(1)->getX(), getNode_2D(2)->getX(), getNode_2D(3)->getX());
