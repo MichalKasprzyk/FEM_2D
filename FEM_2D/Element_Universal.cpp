@@ -120,13 +120,4 @@ void Element_Universal::print_dEta()
 }
 Element_Universal::~Element_Universal()
 {
-	//delete[] ksi;
-	//delete[] eta;
-
-	/*for (int i = 0; i < matrix_size; i++)
-	{
-		delete[] dN_dEta[i];
-		delete[] dN_dKsi[i];
-		delete[] N[i];
-	}*/	
 }
