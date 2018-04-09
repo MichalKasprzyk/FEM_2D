@@ -9,28 +9,25 @@ Jacobian::Jacobian()
 	element_universal->print_dEta();
 	element_universal->print_dKsi();
 	element_universal->print_N();
-	//Element_Universal::init_d_EtaMatrix();
-	//initDx_DEta();
 }
 
 void Jacobian::calculate_Jacobians()
 {
-	jacobian = new double**[jacobian_size]();
+	jacobian = new double**[numberOfLocalJacobians]();
 
 	for (int i = 0; i < jacobian_size; i++)
 	{
 		jacobian[i] = new double*[jacobian_size]();
 		for (int j = 0; j < jacobian_size; j++)
-			jacobian[i][j] = new double[numberOfLocalJacobians]();
+			jacobian[i][j] = new double[jacobian_size]();
 
 	}
-
 
 	for (int i = 0; i < numberOfLocalJacobians; i++)
 	{
 		jacobian[0][0][i] = dX_dKsi[i];
-		jacobian[1][0][i] = dY_dKsi[i];
-		jacobian[0][1][i] = dX_dEta[i];
+		jacobian[0][1][i] = dY_dKsi[i];
+		jacobian[1][0][i] = dX_dEta[i];
 		jacobian[1][1][i] = dY_dEta[i];
 	}
 	/*
@@ -50,7 +47,7 @@ void Jacobian::print_jacobian()
 			for (int k = 0; k < jacobian_size; k++)
 			{
 				// WARNING! BE CAREFUL WHICH INDEX IS FIRST, j swapped with k!
-				printf("%.8f ", jacobian[k][j][i]);
+				printf("%.8f ", jacobian[j][k][i]);
 			}
 			printf("\n");
 		}
@@ -185,7 +182,7 @@ Jacobian::~Jacobian()
 	{
 		delete[] dN_dX[i];
 		delete[] dN_dY[i];
-	}
+	} 
 
 	delete[] dN_dX;
 	delete[] dN_dY;
