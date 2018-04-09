@@ -176,4 +176,16 @@ void Jacobian::printDy_DEta()
 }
 Jacobian::~Jacobian()
 {
+	delete[] dX_dEta;
+	delete[] dX_dKsi;
+	delete[] dY_dEta;
+	delete[] dY_dKsi;
+
+	for (int i = 0; i < matrix_size; i++)
+	{
+		delete[] dN_dX[i];
+		delete[] dN_dY[i];
+	}
+	delete[] dN_dX;
+	delete[] dN_dY;
 }
