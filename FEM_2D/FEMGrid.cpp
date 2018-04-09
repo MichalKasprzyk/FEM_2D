@@ -126,7 +126,7 @@ FEMGrid::FEMGrid()
 
 FEMGrid::~FEMGrid()
 {
-	delete[] jacobian;
-	delete[] nodeArray;
-	delete[] elementArray;
+	//delete[] jacobian;
+	//delete[] nodeArray;
+	//delete[] elementArray;
 }
