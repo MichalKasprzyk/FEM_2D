@@ -32,7 +32,6 @@ int main()
 	//universal->print_dEta();
 	//universal->print_dKsi();
 	getchar();
-	//test
-    return 0;
+	return 0;
 }
 

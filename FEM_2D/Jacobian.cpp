@@ -13,23 +13,34 @@ Jacobian::Jacobian()
 
 void Jacobian::calculate_Jacobians()
 {
-	jacobian = new double**[numberOfLocalJacobians]();
+	jacobian = new double**[jacobian_size];
 
 	for (int i = 0; i < jacobian_size; i++)
 	{
-		jacobian[i] = new double*[jacobian_size]();
-		for (int j = 0; j < jacobian_size; j++)
-			jacobian[i][j] = new double[jacobian_size]();
-
+		jacobian[i] = new double*[jacobian_size];
+		for (int j = 0; j < jacobian_size; j++) {
+			jacobian[i][j] = new double[numberOfLocalJacobians];
+			for (int k = 0; k < numberOfLocalJacobians; k++)
+				jacobian[i][j][k] = 0;
+		}
 	}
 
 	for (int i = 0; i < numberOfLocalJacobians; i++)
 	{
+/*		jacobian[0][0][0] = i;
+		jacobian[0][0][1] = 2;
+		jacobian[0][0][2] = 4;
+		jacobian[0][0][3] = 5;
+		*/
 		jacobian[0][0][i] = dX_dKsi[i];
 		jacobian[0][1][i] = dY_dKsi[i];
 		jacobian[1][0][i] = dX_dEta[i];
 		jacobian[1][1][i] = dY_dEta[i];
+		//jacobian[0][0][i] = -123213; //??????????????????????????? wtf przeciez jest [4][2][2]
 	}
+
+	//jacobian[3][0][3] = 123133;
+
 	/*
 	jacobian[0][0] = dX_dKsi[0];
 	jacobian[0][1] = dY_dKsi[0];

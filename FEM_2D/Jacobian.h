@@ -11,13 +11,16 @@ class Jacobian
 
 	double ***jacobian;
 
-
 	double **dN_dX;
 	double **dN_dY;
 
-	const int matrix_size = 4;
-	const int jacobian_size = 2;
-	const int numberOfLocalJacobians = 4;
+	static const int matrix_size = 4;
+	static const int jacobian_size = 2;
+	static const int numberOfLocalJacobians = 4;
+
+	//double jacobian[numberOfLocalJacobians][jacobian_size][jacobian_size];
+
+
 public:
 
 	void calculate_Jacobians();
