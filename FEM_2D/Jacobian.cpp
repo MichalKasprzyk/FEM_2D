@@ -11,35 +11,61 @@ Jacobian::Jacobian()
 	element_universal->print_N();
 }
 
+void Jacobian::initDN_Matrixes()
+{
+	dN_dX = new double[numberOfLocalJacobians];
+	dN_dY = new double[numberOfLocalJacobians];
+	for (int i = 0; i < numberOfLocalJacobians; i++)
+	{
+		// TODO check matrix Dn_DEta indexes!
+		dN_dX[i] = rev_jacobian[0][0][i] * element_universal->dN_dKsi[i][i] + rev_jacobian[0][1][i] * element_universal->dN_dEta[i][i];
+		dN_dY[i] = rev_jacobian[1][0][i] * element_universal->dN_dKsi[i][i] + rev_jacobian[1][1][i] * element_universal->dN_dKsi[i][i];
+	}
+}
+
 void Jacobian::calculate_Jacobians()
 {
 	jacobian = new double**[jacobian_size];
+	rev_jacobian = new double**[jacobian_size];
+	det_J = new double[numberOfLocalJacobians];
 
 	for (int i = 0; i < jacobian_size; i++)
 	{
 		jacobian[i] = new double*[jacobian_size];
+		rev_jacobian[i] = new double*[jacobian_size];
 		for (int j = 0; j < jacobian_size; j++) {
 			jacobian[i][j] = new double[numberOfLocalJacobians];
-			for (int k = 0; k < numberOfLocalJacobians; k++)
+			rev_jacobian[i][j] = new double[numberOfLocalJacobians];
+			for (int k = 0; k < numberOfLocalJacobians; k++) {
 				jacobian[i][j][k] = 0;
+				rev_jacobian[i][j][k] = 0;
+
+			}
 		}
 	}
 
 	for (int i = 0; i < numberOfLocalJacobians; i++)
 	{
-/*		jacobian[0][0][0] = i;
-		jacobian[0][0][1] = 2;
-		jacobian[0][0][2] = 4;
-		jacobian[0][0][3] = 5;
-		*/
 		jacobian[0][0][i] = dX_dKsi[i];
 		jacobian[0][1][i] = dY_dKsi[i];
 		jacobian[1][0][i] = dX_dEta[i];
 		jacobian[1][1][i] = dY_dEta[i];
-		//jacobian[0][0][i] = -123213; //??????????????????????????? wtf przeciez jest [4][2][2]
 	}
 
-	//jacobian[3][0][3] = 123133;
+
+	for (int i = 0; i < numberOfLocalJacobians; i++)
+	{
+		det_J[i] = jacobian[0][0][i] * jacobian[1][1][i] - jacobian[0][1][i] * jacobian[1][0][i];
+	}
+
+	for (int i = 0; i < numberOfLocalJacobians; i++)
+	{
+		rev_jacobian[0][0][i] = jacobian[1][1][i] / det_J[i];
+		rev_jacobian[0][1][i] = (-1)*jacobian[0][1][i] / det_J[i];
+		rev_jacobian[1][0][i] = (-1)*jacobian[1][0][i] / det_J[i];
+		rev_jacobian[1][1][i] = jacobian[0][0][i] / det_J[i];
+
+	}
 
 	/*
 	jacobian[0][0] = dX_dKsi[0];
@@ -47,9 +73,31 @@ void Jacobian::calculate_Jacobians()
 	jacobian[1][0] = dX_dEta[0];
 	jacobian[1][1] = dY_dEta[0]; */
 }
-void Jacobian::print_jacobian()
+
+void Jacobian::printDN_dX()
 {
 	printf("\n");
+	printf("Matrix DN_dX\n");
+	for (int i = 0; i < numberOfLocalJacobians; i++)
+	{
+		printf(" %.8f\n", dN_dX[i]);
+	}
+}
+
+
+void Jacobian::printDN_dY()
+{
+	printf("\n");
+	printf("Matrix DN_dY\n");
+	for (int i = 0; i < numberOfLocalJacobians; i++)
+	{
+		printf(" %.8f\n", dN_dY[i]);
+	}
+}
+
+void Jacobian::print_jacobian()
+{
+	printf("\n**********************\n");
 	for (int i = 0; i < numberOfLocalJacobians; i++)
 	{
 		printf("Jacobian %i\n", i);
@@ -57,12 +105,28 @@ void Jacobian::print_jacobian()
 		{
 			for (int k = 0; k < jacobian_size; k++)
 			{
-				// WARNING! BE CAREFUL WHICH INDEX IS FIRST, j swapped with k!
-				printf("%.8f ", jacobian[j][k][i]);
+				printf("  %.8f ", jacobian[j][k][i]);
 			}
 			printf("\n");
 		}
 		printf("\n");
+
+		printf("Reversed Jacobian %i\n", i);
+		for (int j = 0; j < jacobian_size; j++)
+		{
+			for (int k = 0; k < jacobian_size; k++)
+			{
+				printf("  %.8f ", rev_jacobian[j][k][i]);
+			}
+			printf("\n");
+		}
+		printf("\n");
+		
+		printf("Det J %i\n", i);
+		printf("  %.8f\n", det_J[i]);
+
+		printf("**********************\n");
+
 	}
 }
 void Jacobian::initDy_DEta(double y1, double y2, double y3, double y4)

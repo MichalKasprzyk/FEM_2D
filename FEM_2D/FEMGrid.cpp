@@ -10,6 +10,7 @@ void FEMGrid::init_Jacobian()
 
 void FEMGrid::generate_Dx_Dksi()
 {
+	// TODO fix that god damn function finally..
 	getNode_2D(0)->setX(0.0);	getNode_2D(0)->setY(0.0);
 	getNode_2D(1)->setX(0.2); getNode_2D(1)->setY(0.0);
 	getNode_2D(2)->setX(0.2); getNode_2D(2)->setY(0.15);
@@ -32,6 +33,9 @@ void FEMGrid::generate_Dx_Dksi()
 	jacobian->printDy_DKsi();
 	jacobian->calculate_Jacobians();
 	jacobian->print_jacobian();
+	jacobian->initDN_Matrixes();
+	jacobian->printDN_dX();
+	jacobian->printDN_dY();
 }
 
 void FEMGrid::generaterArray_2D()
