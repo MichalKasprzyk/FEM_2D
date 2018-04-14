@@ -31,6 +31,7 @@ int main()
 	//universal->print_N();
 	//universal->print_dEta();
 	//universal->print_dKsi();
+	grid->generate_local_H();
 	getchar();
 	return 0;
 }

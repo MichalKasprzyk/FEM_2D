@@ -2,6 +2,13 @@
 #include "FEMGrid.h"
 
 
+
+void FEMGrid::generate_local_H()
+{
+	// TODO Introduce more elements cmon homie..
+	elementArray[0].calculate_H(jacobian->getdN_dX(), jacobian->getdN_dY());
+	elementArray[0].print_H();
+}
 void FEMGrid::init_Jacobian()
 {
 	jacobian = new Jacobian();
@@ -12,9 +19,9 @@ void FEMGrid::generate_Dx_Dksi()
 {
 	// TODO fix that god damn function finally..
 	getNode_2D(0)->setX(0.0);	getNode_2D(0)->setY(0.0);
-	getNode_2D(1)->setX(0.2); getNode_2D(1)->setY(0.0);
-	getNode_2D(2)->setX(0.2); getNode_2D(2)->setY(0.15);
-	getNode_2D(3)->setX(0.0);	getNode_2D(3)->setY(0.1);
+	getNode_2D(1)->setX(0.025); getNode_2D(1)->setY(0.0);
+	getNode_2D(2)->setX(0.025); getNode_2D(2)->setY(0.025);
+	getNode_2D(3)->setX(0.0);	getNode_2D(3)->setY(0.025);
 
 
 	getNode_2D(0)->print();

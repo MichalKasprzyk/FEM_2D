@@ -12,8 +12,15 @@ private:
 	static int id;
 	int iid;
 
+	double** local_H;
+	const double matrix_size = 4;
+
 public:
 
+	void init_H();
+	void calculate_H(double** dN_dX, double** dN_dY);
+
+	void print_H();
 	void print();
 	int getId();
 	void setId(int i, int j);

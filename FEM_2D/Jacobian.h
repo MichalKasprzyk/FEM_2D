@@ -13,8 +13,8 @@ class Jacobian
 	double ***jacobian;
 	double ***rev_jacobian;
 
-	double *dN_dX;
-	double *dN_dY;
+	double **dN_dX;
+	double **dN_dY;
 
 	static const int matrix_size = 4;
 	static const int jacobian_size = 2;
@@ -23,6 +23,10 @@ class Jacobian
 
 
 public:
+
+	double** getdN_dX();
+	double** getdN_dY();
+	double* get_det_J();
 
 	void initDN_Matrixes();
 	void calculate_Jacobians();

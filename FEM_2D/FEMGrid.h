@@ -18,11 +18,14 @@ private:
 	Jacobian *jacobian;
 
 
+
+
 public:
 
 	void init_Jacobian();
 	void generate_Dx_Dksi();
 
+	void generate_local_H();
 
 	void calculateElementArray_2D();
 	void calculateNodeArray_2D();
