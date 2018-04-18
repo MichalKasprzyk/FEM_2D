@@ -18,6 +18,7 @@ public:
 	static int numberOfNodes_B_2D;
 	static double delta_x_2D;
 	static double delta_y_2D;
+	static double k;
 
 	void print_2D();
 	void readGridFromFile();

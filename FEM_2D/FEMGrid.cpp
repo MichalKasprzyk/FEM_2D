@@ -6,7 +6,7 @@
 void FEMGrid::generate_local_H()
 {
 	// TODO Introduce more elements cmon homie..
-	elementArray[0].calculate_H(jacobian->getdN_dX(), jacobian->getdN_dY());
+	elementArray[0].calculate_H(jacobian->getdN_dX(), jacobian->getdN_dY(),jacobian->get_det_J());
 	elementArray[0].print_H();
 }
 void FEMGrid::init_Jacobian()

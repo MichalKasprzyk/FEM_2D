@@ -11,6 +11,7 @@ int GlobalData::numberOfNodes_H_2D = 0;
 int GlobalData::numberOfNodes_B_2D = 0;
 double GlobalData::delta_x_2D = 0;
 double GlobalData::delta_y_2D = 0;
+double GlobalData::k = 25;
 
 
 GlobalData::GlobalData()

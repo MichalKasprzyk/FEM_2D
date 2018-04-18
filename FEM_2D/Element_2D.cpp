@@ -49,14 +49,26 @@ void Element_2D::init_H()
 			local_H[i][j] = 0;
 }
 
-void Element_2D::calculate_H(double** dN_dX, double** dN_dY)
+void Element_2D::calculate_H(double** dN_dX, double** dN_dY, double* det_J)
 {
 	init_H();
+
 	for (int i = 0; i < matrix_size; i++)
 	{
 		for (int j = 0; j < matrix_size; j++)
 		{
-			local_H[i][j] = dN_dX[i][i] * dN_dX[j][i]; //+ dN_dY[i][j] * dN_dY[i][j];
+			//local_H[i][j] = dN_dX[i][0] * dN_dX[j][0]; <- dn/DX 1PC 
+			//local_H[i][j] = dN_dX[i][1] * dN_dX[j][1]; <- dn/DX 2PC
+			//local_H[i][j] = dN_dX[i][2] * dN_dX[j][2]; <- dn/DX 3PC
+			//local_H[i][j] = dN_dX[i][3] * dN_dX[j][3]; <- dn/DX 4PC
+			
+			
+			//local_H[i][j] = dN_dY[i][0] * dN_dY[j][0]; <- dn/DY 1PC
+			//local_H[i][j] = dN_dY[i][1] * dN_dY[j][1]; <- dn/DY 2PC
+			//local_H[i][j] = dN_dY[i][2] * dN_dY[j][2]; <- dn/DY 3PC
+			//local_H[i][j] = dN_dY[i][3] * dN_dY[j][3]*det_J[j];  <- dN/DY 4PC with optional Det_J 
+			for(int k=0; k<matrix_size;k++)
+				local_H[i][j] += GlobalData::k*(dN_dY[i][k] * dN_dY[j][k] * det_J[j] + dN_dX[i][k] * dN_dX[j][k] * det_J[j]);
 		}
 	}
 }

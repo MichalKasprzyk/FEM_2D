@@ -41,7 +41,7 @@ void Jacobian::initDN_Matrixes()
 		for (int i = 0; i < numberOfLocalJacobians; i++)
 		{
 			// TODO check matrix Dn_DEta indexes!
-			dN_dX[i][j] = rev_jacobian[0][0][i] * element_universal->dN_dKsi[i][j] + rev_jacobian[0][1][i] * element_universal->dN_dEta[i][j];
+			dN_dX[i][j] = rev_jacobian[0][0][i] * element_universal->dN_dKsi[i][j] - rev_jacobian[0][1][i] * element_universal->dN_dEta[i][j];
 			dN_dY[i][j] = rev_jacobian[1][0][i] * element_universal->dN_dKsi[i][j] + rev_jacobian[1][1][i] * element_universal->dN_dEta[i][j];
 		}
 	}

@@ -18,7 +18,7 @@ private:
 public:
 
 	void init_H();
-	void calculate_H(double** dN_dX, double** dN_dY);
+	void calculate_H(double** dN_dX, double** dN_dY,double * det_J);
 
 	void print_H();
 	void print();
