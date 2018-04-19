@@ -3,6 +3,12 @@
 #include <cmath>
 
 
+
+int Element_Universal::get_matrix_size()
+{
+	return matrix_size;
+}
+
 double** Element_Universal::getDn_dEta()
 {
 	return dN_dEta;
@@ -83,41 +89,6 @@ Element_Universal::Element_Universal()
 	init_N_Matrix();
 }
 
-void Element_Universal::print_N()
-{
-	printf("Matrix N\n\n");
-	for (int i = 0; i < matrix_size; i++)
-	{
-		for (int j = 0 ; j<matrix_size; j++)
-			printf("  %.8f  ", N[i][j]);
-		printf("\n");
-	}
-	printf("\n");
-}
-
-void Element_Universal::print_dKsi()
-{
-	printf("Matrix dN / dKsi \n\n");
-	for (int i = 0; i < matrix_size; i++)
-	{
-		for (int j = 0; j<matrix_size; j++)
-			printf("  %.8f  ", dN_dKsi[i][j]);
-		printf("\n");
-	}
-	printf("\n");
-}
-
-void Element_Universal::print_dEta()
-{
-	printf("Matrix dN / dEta \n\n");
-	for (int i = 0; i < matrix_size; i++)
-	{
-		for (int j = 0; j<matrix_size; j++)
-			printf("  %.8f  ", dN_dEta[i][j]);
-		printf("\n");
-	}
-	printf("\n");
-}
 Element_Universal::~Element_Universal()
 {
 }

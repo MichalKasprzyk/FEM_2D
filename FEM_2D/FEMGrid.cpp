@@ -7,7 +7,7 @@ void FEMGrid::generate_local_H()
 {
 	// TODO Introduce more elements cmon homie..
 	elementArray[0].calculate_H(jacobian->getdN_dX(), jacobian->getdN_dY(),jacobian->get_det_J());
-	elementArray[0].print_H();
+	GlobalData::printArray(elementArray[0].get_H(), elementArray[0].get_matrix_size(), elementArray[0].get_matrix_size(), "H local");
 }
 void FEMGrid::init_Jacobian()
 {
@@ -31,18 +31,22 @@ void FEMGrid::generate_Dx_Dksi()
 
 	// Possibly change order of points being added, from 1 6 7 2 to 1 2 6 7, not sure though..
 	jacobian->initDx_DEta(getNode_2D(0)->getX(), getNode_2D(1)->getX(), getNode_2D(2)->getX(), getNode_2D(3)->getX());
-	jacobian->printDx_DEta();
+
+	GlobalData::printArray(jacobian->get_dX_dEta(), jacobian->get_matrix_size(), "dX_dEta");
 	jacobian->initDx_DKsi(getNode_2D(0)->getX(), getNode_2D(1)->getX(), getNode_2D(2)->getX(), getNode_2D(3)->getX());
-	jacobian->printDx_DKsi();
+	GlobalData::printArray(jacobian->get_dX_dKsi(), jacobian->get_matrix_size(), "dX_dKsi");
 	jacobian->initDy_DEta(getNode_2D(0)->getY(), getNode_2D(1)->getY(), getNode_2D(2)->getY(), getNode_2D(3)->getY());
-	jacobian->printDy_DEta();
+	GlobalData::printArray(jacobian->get_dY_dEta(), jacobian->get_matrix_size(), "dY_dEta");
 	jacobian->initDy_DKsi(getNode_2D(0)->getY(), getNode_2D(1)->getY(), getNode_2D(2)->getY(), getNode_2D(3)->getY());
-	jacobian->printDy_DKsi();
+	GlobalData::printArray(jacobian->get_dY_dKsi(), jacobian->get_matrix_size(), "dY_dKsi");
+
+
 	jacobian->calculate_Jacobians();
 	jacobian->print_jacobian();
 	jacobian->initDN_Matrixes();
-	jacobian->printDN_dX();
-	jacobian->printDN_dY();
+
+	GlobalData::printArray(jacobian->getdN_dX(), jacobian->get_matrix_size(), jacobian->get_matrix_size(), "dN_dX");
+	GlobalData::printArray(jacobian->getdN_dY(), jacobian->get_matrix_size(), jacobian->get_matrix_size(), "dN_dY");
 }
 
 void FEMGrid::generaterArray_2D()

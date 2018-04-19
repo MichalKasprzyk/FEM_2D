@@ -84,3 +84,37 @@ void GlobalData::print_2D()
 	std::cout << "Delta y = " << this->delta_y_2D << std::endl;
 	std::cout << "============================" << std::endl;
 }
+
+
+void GlobalData::printArray(double **array, double columns, double rows, std::string arr_name)
+{
+	std::cout << std::endl << "Matrix " << arr_name << std::endl << std::endl;
+	std::cout.precision(8);
+	for (int i = 0; i < columns; i++)
+	{
+		for (int j = 0; j < rows; j++) {
+			if(array[i][j]<0)
+				std::cout << std::left << "   " << array[i][j];
+			else
+				std::cout << std::left << "    " << array[i][j];
+		}
+
+		std::cout << std::endl;
+	}
+	std::cout << std::endl;
+}
+
+
+void GlobalData::printArray(double *array, double arr_length, std::string arr_name)
+{
+	std::cout << std::endl << "Matrix " << arr_name << std::endl << std::endl;
+	std::cout.precision(8);
+	for (int i = 0; i < arr_length; i++)
+	{
+		if (array[i]<0)
+			std::cout << std::left << "   " << array[i];
+		else
+			std::cout << std::left << "    " << array[i];
+	}
+	std::cout << std::endl;
+}

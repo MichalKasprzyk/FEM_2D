@@ -13,16 +13,17 @@ private:
 	int iid;
 
 	double** local_H;
-	const double matrix_size = 4;
+	const int matrix_size = 4;
 
 public:
 
 	void init_H();
 	void calculate_H(double** dN_dX, double** dN_dY,double * det_J);
 
-	void print_H();
 	void print();
 	int getId();
+	double** get_H();
+	int get_matrix_size();
 	void setId(int i, int j);
 	Element_2D();
 	~Element_2D();

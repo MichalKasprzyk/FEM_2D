@@ -10,6 +10,15 @@ Element_2D::Element_2D()
 	id++;
 }
 
+int Element_2D::get_matrix_size()
+{
+	return matrix_size;
+}
+
+double** Element_2D::get_H()
+{
+	return local_H;
+}
 
 void Element_2D::print()
 {
@@ -74,17 +83,6 @@ void Element_2D::calculate_H(double** dN_dX, double** dN_dY, double* det_J)
 }
 
 
-void Element_2D::print_H()
-{
-	printf("\n");
-	printf("Element H (nodes %i,%i,%i,%i)\n",ID[0],ID[1],ID[2],ID[3]);
-	for (int i = 0; i < matrix_size; i++)
-	{
-		for (int j = 0; j<matrix_size; j++)
-			printf("  %.8f", local_H[i][j]);
-		printf("\n");
-	}
-}
 Element_2D::~Element_2D()
 {
 }

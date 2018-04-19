@@ -4,7 +4,7 @@
 #include <cstdlib>
 #include <string>
 
-static class GlobalData
+class GlobalData
 {
 
 public:
@@ -23,6 +23,9 @@ public:
 	void print_2D();
 	void readGridFromFile();
 	void calculateRestOfGlobalData_2D();
+
+	static void printArray(double *array, double arr_length, std::string arr_name);
+	static void printArray(double **array, double columns, double rows, std::string arr_name);
 
 	GlobalData();
 	~GlobalData();

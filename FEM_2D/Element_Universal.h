@@ -21,12 +21,9 @@ public:
 	double** getDn_dEta();
 	double** getN();
 	double** getDn_dKsi();
+	int get_matrix_size();
 
 
-	/* printing functions */
-	void print_N();
-	void print_dKsi();
-	void print_dEta();
 	Element_Universal();
 	~Element_Universal();
 };

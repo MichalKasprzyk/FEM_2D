@@ -3,12 +3,45 @@
 
 
 
+
 Jacobian::Jacobian()
 {
 	element_universal = new Element_Universal();
-	element_universal->print_dEta();
-	element_universal->print_dKsi();
-	element_universal->print_N();
+	GlobalData::printArray(element_universal->getDn_dEta(), element_universal->get_matrix_size(), element_universal->get_matrix_size(), "dN_dEta");
+	GlobalData::printArray(element_universal->getDn_dKsi(), element_universal->get_matrix_size(), element_universal->get_matrix_size(), "dN_dKsi");
+	GlobalData::printArray(element_universal->getN(), element_universal->get_matrix_size(), element_universal->get_matrix_size(), "N");
+	
+
+}
+
+int Jacobian::get_jacobian_size()
+{
+	return jacobian_size;
+}
+
+int Jacobian::get_matrix_size()
+{
+	return matrix_size;
+}
+
+double* Jacobian::get_dX_dEta()
+{
+	return dX_dEta;
+}
+
+double* Jacobian::get_dX_dKsi()
+{
+	return dX_dKsi;
+}
+
+double* Jacobian::get_dY_dEta()
+{
+	return dY_dEta;
+}
+
+double* Jacobian::get_dY_dKsi()
+{
+	return dY_dKsi;
 }
 
 double* Jacobian::get_det_J()
@@ -98,30 +131,7 @@ void Jacobian::calculate_Jacobians()
 	jacobian[1][1] = dY_dEta[0]; */
 }
 
-void Jacobian::printDN_dX()
-{
-	printf("\n");
-	printf("Matrix DN_dX\n");
-	for (int i = 0; i < numberOfLocalJacobians; i++)
-	{
-		for(int j=0; j<numberOfLocalJacobians;j++)
-			printf("  %.8f", dN_dX[i][j]);
-		printf("\n");
-	}
-}
 
-
-void Jacobian::printDN_dY()
-{
-	printf("\n");
-	printf("Matrix DN_dY\n");
-	for (int i = 0; i < numberOfLocalJacobians; i++)
-	{
-		for(int j=0;j<numberOfLocalJacobians;j++)
-			printf("  %.8f", dN_dY[i][j]);
-		printf("\n");
-	}
-}
 
 void Jacobian::print_jacobian()
 {
@@ -230,50 +240,6 @@ void Jacobian::initDx_DKsi(double x1, double x2, double x3,double x4)
 	}
 }
 
-
-void Jacobian::printDx_DEta()
-{	
-	printf("\n");
-	printf("Matrix dX / dEta \n");
-	for (int i = 0; i < matrix_size; i++)
-	{
-		printf("  %.8f  ", dX_dEta[i]);
-	}
-	printf("\n");
-}
-
-void Jacobian::printDx_DKsi()
-{
-	printf("\n");
-	printf("Matrix dX / dKsi \n");
-	for (int i = 0; i < matrix_size; i++)
-	{
-		printf("  %.8f  ", dX_dKsi[i]);
-	}
-	printf("\n");
-}
-
-void Jacobian::printDy_DKsi()
-{
-	printf("\n");
-	printf("Matrix dY / dKsi \n");
-	for (int i = 0; i < matrix_size; i++)
-	{
-		printf("  %.8f  ", dY_dKsi[i]);
-	}
-	printf("\n");
-}
-
-void Jacobian::printDy_DEta()
-{
-	printf("\n");
-	printf("Matrix dY / dEta \n");
-	for (int i = 0; i < matrix_size; i++)
-	{
-		printf("  %.8f  ", dY_dEta[i]);
-	}
-	printf("\n");
-}
 Jacobian::~Jacobian()
 {
 }
