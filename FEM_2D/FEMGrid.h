@@ -26,6 +26,7 @@ public:
 	void generate_Dx_Dksi();
 
 	void generate_local_H();
+	void generate_C();
 
 	void calculateElementArray_2D();
 	void calculateNodeArray_2D();

@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "GlobalData.h"
 
+using std::vector;
 
 /* Init przypadku 2D */
 double GlobalData::h_2D = 0;
@@ -11,7 +12,10 @@ int GlobalData::numberOfNodes_H_2D = 0;
 int GlobalData::numberOfNodes_B_2D = 0;
 double GlobalData::delta_x_2D = 0;
 double GlobalData::delta_y_2D = 0;
-double GlobalData::k = 25;
+double GlobalData::k = 0;
+int GlobalData::c = 0;
+int GlobalData::ro = 0;
+int GlobalData::alfa = 0;
 
 
 GlobalData::GlobalData()
@@ -49,6 +53,18 @@ void GlobalData::readGridFromFile()
 			case 'H':
 				GlobalData::numberOfNodes_H_2D = varValue;
 				break;
+			case 'k':
+				GlobalData::k = varValue;
+				break;
+			case 'c':
+				GlobalData::c = varValue;
+				break;
+			case 'r':
+				GlobalData::ro = varValue;
+				break;
+			case 'a':
+				GlobalData::alfa = varValue;
+				break;
 			}
 
 		}
@@ -82,8 +98,22 @@ void GlobalData::print_2D()
 	std::cout << "Number of elements = " << this->numberOfElements_2D << std::endl;
 	std::cout << "Delta x = " << this->delta_x_2D << std::endl;
 	std::cout << "Delta y = " << this->delta_y_2D << std::endl;
+	std::cout << "K = " << this->k << std::endl;
+	std::cout << "c = " << this->c << std::endl;
+	std::cout << "ro = " << this->ro << std::endl;
+	std::cout << "alfa = " << this->alfa << std::endl;
 	std::cout << "============================" << std::endl;
 }
+
+void GlobalData::initVector(std::vector< vector<double> > &array, int size)
+{
+	array.resize(size);
+	for (int i = 0; i < array.size(); i++)
+	{
+		array[i].resize(size);
+	}
+}
+
 
 
 void GlobalData::printArray(double **array, double columns, double rows, std::string arr_name)

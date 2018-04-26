@@ -14,6 +14,10 @@ Jacobian::Jacobian()
 
 }
 
+Element_Universal* Jacobian::getElement_universal()
+{
+	return element_universal;
+}
 int Jacobian::get_jacobian_size()
 {
 	return jacobian_size;

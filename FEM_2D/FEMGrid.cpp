@@ -7,7 +7,16 @@ void FEMGrid::generate_local_H()
 {
 	// TODO Introduce more elements cmon homie..
 	elementArray[0].calculate_H(jacobian->getdN_dX(), jacobian->getdN_dY(),jacobian->get_det_J());
+	elementArray[0].calculate_boundries(jacobian->getElement_universal()->getN(),jacobian->get_det_J());
 	GlobalData::printArray(elementArray[0].get_H(), elementArray[0].get_matrix_size(), elementArray[0].get_matrix_size(), "H local");
+	GlobalData::printVector(elementArray[0].get_bound_cond_H()," H boundry condition");
+}
+
+void FEMGrid::generate_C()
+{
+	//TODO Fix to make it about more elements
+	elementArray[0].calculate_C(jacobian->getElement_universal()->getN(),jacobian->get_det_J());
+	GlobalData::printVector(elementArray[0].get_C(), " C ");
 }
 void FEMGrid::init_Jacobian()
 {

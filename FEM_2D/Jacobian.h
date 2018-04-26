@@ -35,6 +35,8 @@ public:
 	double* get_dY_dEta();
 	double* get_dY_dKsi();
 
+	Element_Universal* getElement_universal();
+
 	int get_matrix_size();
 	int get_jacobian_size();
 
@@ -47,12 +49,7 @@ public:
 	void initDy_DEta(double y1, double y2, double y3, double y4);
 	void initDy_DKsi(double y1, double y2, double y3, double y4);
 
-	void printDN_dX();
-	void printDN_dY();
-	void printDx_DKsi();
-	void printDx_DEta();
-	void printDy_DKsi();
-	void printDy_DEta();
+
 	void print_jacobian();
 	Jacobian();
 	~Jacobian();

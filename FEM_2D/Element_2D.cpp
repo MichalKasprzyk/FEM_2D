@@ -45,6 +45,8 @@ int Element_2D::getId()
 }
 
 
+
+
 void Element_2D::init_H()
 {
 	local_H = new double*[matrix_size];
@@ -54,8 +56,35 @@ void Element_2D::init_H()
 	}
 
 	for (int i = 0; i < matrix_size; i++)
-		for (int j = 0; j < matrix_size; j++)
+		for (int j = 0; j < matrix_size; j++) {
 			local_H[i][j] = 0;
+		}
+}
+
+void Element_2D::calculate_boundries(double **N,double *det_J)
+{
+	//Careful about which nodes have heat condition in them
+	GlobalData::initVector(bound_cond_H, matrix_size);
+	vector<double> eta{ -1,-1 };
+	vector<double> ksi{ -0.57,0.57 };
+	//GlobalData::printVector1D(ksi, " ksi ");
+
+	vector< vector<double> > new_N;
+	GlobalData::initVector(new_N, matrix_size);
+
+
+
+	for (int i = 0; i < bound_cond_H.size(); i++)
+	{
+		for (int j = 0; j < bound_cond_H.size(); j++)
+		{
+			for (int k = 0; k < matrix_size; k++) {
+				bound_cond_H[i][j] = GlobalData::alfa* N[i][k] * N[j][k] * det_J[j];
+			}
+		}
+	}
+
+
 }
 
 void Element_2D::calculate_H(double** dN_dX, double** dN_dY, double* det_J)
@@ -82,6 +111,32 @@ void Element_2D::calculate_H(double** dN_dX, double** dN_dY, double* det_J)
 	}
 }
 
+void Element_2D::calculate_C(double **N,double* det_J)
+{
+	
+	GlobalData::initVector(matrix_C, matrix_size);
+
+	for (int i = 0; i < matrix_C.size(); i++)
+	{
+		for (int j = 0; j < matrix_C.size(); j++)
+		{
+			for (int k = 0; k < matrix_size; k++) {
+				matrix_C[i][j] += GlobalData::ro * GlobalData::c * N[i][k] * N[j][k]*det_J[j];
+			}
+		}
+	}
+
+}
+
+vector< vector <double> > Element_2D::get_C()
+{
+	return matrix_C;
+}
+
+vector < vector <double> > Element_2D::get_bound_cond_H()
+{
+	return bound_cond_H;
+}
 
 Element_2D::~Element_2D()
 {
