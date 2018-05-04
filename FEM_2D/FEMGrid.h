@@ -5,8 +5,9 @@
 #include "Element_2D.h"
 #include "Jacobian.h"
 
+//static Node_2D *nodeArray;
 
-class FEMGrid
+static class FEMGrid
 {
 
 private:
@@ -35,6 +36,9 @@ public:
 	Node_2D* getNodeArray_2D();
 	Element_2D* getElement_2D(int index);
 	Element_2D* getElementArray_2D();
+
+
+
 
 	FEMGrid();
 	~FEMGrid();

@@ -7,9 +7,18 @@ void FEMGrid::generate_local_H()
 {
 	// TODO Introduce more elements cmon homie..
 	elementArray[0].calculate_H(jacobian->getdN_dX(), jacobian->getdN_dY(),jacobian->get_det_J());
-	elementArray[0].calculate_boundries(jacobian->getElement_universal()->getN(),jacobian->get_det_J());
 	GlobalData::printArray(elementArray[0].get_H(), elementArray[0].get_matrix_size(), elementArray[0].get_matrix_size(), "H local");
+
+
+	// Introduced boundary condition on Surface 1 (Hopefully)
+	getNode_2D(0)->setStatus(1); getNode_2D(2)->setStatus(1);
+	getNode_2D(1)->setStatus(1); getNode_2D(3)->setStatus(1);
+
+
+
+	elementArray[0].calculate_boundries(jacobian->getElement_universal()->getN(),jacobian->get_det_J());
 	GlobalData::printVector(elementArray[0].get_bound_cond_H()," H boundry condition");
+	elementArray[0].print();
 }
 
 void FEMGrid::generate_C()
@@ -100,6 +109,7 @@ void FEMGrid::calculateNodeArray_2D()
 		y = 0;
 	}
 	std::cout << std::endl;
+
 }
 
 
@@ -110,10 +120,12 @@ void FEMGrid::calculateElementArray_2D()
 	*/
 
 	elementArray = new Element_2D[GlobalData::numberOfElements_2D];
+	// FOR TEST PURPOSES CHANGING IDS to 0! (i = 0 instead of i=1 and j = 0 instead of j = 1)
+	// It has to have -1 numberOfNodes_B and _H condition too if you want it to work
 	int k = 0;
-		for (int j = 1; j < GlobalData::numberOfNodes_B_2D; j++)
+		for (int j = 0; j < GlobalData::numberOfNodes_B_2D-1; j++)
 		{
-			for (int i = 1; i < GlobalData::numberOfNodes_H_2D; i++)
+			for (int i = 0; i < GlobalData::numberOfNodes_H_2D-1; i++)
 			{
 				elementArray[k++].setId(i, j);
 			}
@@ -131,8 +143,9 @@ Element_2D * FEMGrid::getElementArray_2D()
 Node_2D * FEMGrid::getNodeArray_2D()
 {
 
-	return this->nodeArray;
-}
+	return nodeArray;
+	//return this->nodeArray;
+} 
 
 Element_2D* FEMGrid::getElement_2D(int index)
 {

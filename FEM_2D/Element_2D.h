@@ -5,14 +5,18 @@
 
 using std::vector;
 
+
 class Element_2D
 {
 private:
 
 	//Node nodeArray[4];
-	int ID[4];
 
-	static int id;
+
+	int ID[4];
+	int bound_cond[4];
+
+	static int el_id;
 	int iid;
 
 	double** local_H;
@@ -20,6 +24,7 @@ private:
 	const int matrix_size = 4;
 	vector< vector <double> > matrix_C;
 	vector< vector <double> > bound_cond_H;
+	vector< double > length;
 
 public:
 
@@ -28,9 +33,14 @@ public:
 	void calculate_C(double** N, double* det_J);
 	void calculate_boundries(double **N,double* det_J);
 
+
+	void init_length();
+	void print_boundry();
+	void init_bound_cond();
 	void print();
 	int getId();
 	double** get_H();
+	int* get_element_node_ID();
 	vector< vector <double> > get_C();
 	vector< vector <double> > get_bound_cond_H();
 	int get_matrix_size();

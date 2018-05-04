@@ -13,6 +13,7 @@ public:
 	void print();
 	void setY(double y);
 	Node_2D();
+	int getStatus();
 
 	Node_2D(double x, double y);
 	~Node_2D();

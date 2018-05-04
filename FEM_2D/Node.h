@@ -22,7 +22,7 @@ public:
 	void setX(double x);
 
 
-	void setStatus();
+	void setStatus(int status);
 	void showStatus();
 	void print();
 

@@ -8,6 +8,9 @@
 #include "Node_2D.h"
 #include "Element_Universal.h"
 
+
+FEMGrid* grid;
+
 int main()
 {
 	GlobalData* data = new GlobalData();
@@ -17,7 +20,8 @@ int main()
 
 
 	/*    Case 2D  */
-	FEMGrid* grid = new FEMGrid();
+	grid = new FEMGrid();
+	//FEMGrid* grid = new FEMGrid();
 	grid->calculateElementArray_2D();
 	//for (int i = 0; i < GlobalData::numberOfElements_2D; i++)
 		//grid->getElement_2D(i)->print();

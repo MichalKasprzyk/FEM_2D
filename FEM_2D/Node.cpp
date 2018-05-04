@@ -25,7 +25,7 @@ Node::Node(double x)
 	this->iid = id;
 	id++;
 	this->x = x;
-	//this->status = status;
+	//this->status = 0;
 }
 
 
@@ -45,6 +45,11 @@ Node::Node()
 {
 	this->iid = id;
 	id++;
+}
+
+void Node::setStatus(int status)
+{
+	this->status = status;
 }
 
 Node::~Node()
