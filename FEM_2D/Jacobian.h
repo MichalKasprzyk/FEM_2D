@@ -44,11 +44,17 @@ public:
 
 	void initDN_Matrixes();
 	void calculate_Jacobians();
+	/*
 	void initDx_DEta(double x1, double x2, double x3, double x4);
 	void initDx_DKsi(double x1, double x2, double x3, double x4);
 	void initDy_DEta(double y1, double y2, double y3, double y4);
 	void initDy_DKsi(double y1, double y2, double y3, double y4);
+	*/
 
+	void initDx_DEta(std::vector<double> x);
+	void initDx_DKsi(std::vector<double> x);
+	void initDy_DEta(std::vector<double> y);
+	void initDy_DKsi(std::vector<double> y);
 
 	void print_jacobian();
 	Jacobian();

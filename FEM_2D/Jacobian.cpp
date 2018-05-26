@@ -7,9 +7,9 @@
 Jacobian::Jacobian()
 {
 	element_universal = new Element_Universal();
-	GlobalData::printArray(element_universal->getDn_dEta(), element_universal->get_matrix_size(), element_universal->get_matrix_size(), "dN_dEta");
-	GlobalData::printArray(element_universal->getDn_dKsi(), element_universal->get_matrix_size(), element_universal->get_matrix_size(), "dN_dKsi");
-	GlobalData::printArray(element_universal->getN(), element_universal->get_matrix_size(), element_universal->get_matrix_size(), "N");
+	//GlobalData::printArray(element_universal->getDn_dEta(), element_universal->get_matrix_size(), element_universal->get_matrix_size(), "dN_dEta");
+	//GlobalData::printArray(element_universal->getDn_dKsi(), element_universal->get_matrix_size(), element_universal->get_matrix_size(), "dN_dKsi");
+	//GlobalData::printArray(element_universal->getN(), element_universal->get_matrix_size(), element_universal->get_matrix_size(), "N");
 	
 
 }
@@ -171,6 +171,85 @@ void Jacobian::print_jacobian()
 
 	}
 }
+
+void Jacobian::initDy_DEta(std::vector<double> y)
+{
+	dY_dEta = new double[matrix_size];
+	for (int i = 0; i < matrix_size; i++)
+	{
+		dY_dEta[i] = 0;
+	}
+	for (int i = 0; i < matrix_size; i++)
+	{
+		// TODO -> Uwaga tutaj wprowadzam zmiany wieksze
+
+		dY_dEta[i] += element_universal->getDn_dEta()[0][i] * y[0];
+		dY_dEta[i] += element_universal->getDn_dEta()[1][i] * y[1];
+		dY_dEta[i] += element_universal->getDn_dEta()[2][i] * y[2];
+		dY_dEta[i] += element_universal->getDn_dEta()[3][i] * y[3];  
+		/*for (int m = 0; m < matrix_size; ++m) {
+			dY_dEta[i] += element_universal->getDn_dEta()[0][m] * y[i];
+			dY_dEta[i] += element_universal->getDn_dEta()[1][m] * y[i];
+			dY_dEta[i] += element_universal->getDn_dEta()[2][m] * y[i];
+			dY_dEta[i] += element_universal->getDn_dEta()[3][m] * y[i];
+		}  */
+
+
+	}
+}
+
+void Jacobian::initDy_DKsi(std::vector<double> y)
+{
+	dY_dKsi = new double[matrix_size];
+	for (int i = 0; i < matrix_size; i++)
+	{
+		dY_dKsi[i] = 0;
+	}
+	for (int i = 0; i < matrix_size; i++)
+	{
+
+		dY_dKsi[i] += element_universal->getDn_dKsi()[0][i] * y[0];
+		dY_dKsi[i] += element_universal->getDn_dKsi()[1][i] * y[1];
+		dY_dKsi[i] += element_universal->getDn_dKsi()[2][i] * y[2];
+		dY_dKsi[i] += element_universal->getDn_dKsi()[3][i] * y[3];
+	}
+}
+
+void Jacobian::initDx_DEta(std::vector<double> x) {
+	dX_dEta = new double[matrix_size];
+	for (int i = 0; i < matrix_size; i++)
+	{
+		dX_dEta[i] = 0;
+	}
+	for (int i = 0; i < matrix_size; i++)
+	{
+
+		dX_dEta[i] += element_universal->getDn_dEta()[0][i] * x[0];
+		dX_dEta[i] += element_universal->getDn_dEta()[1][i] * x[1];
+		dX_dEta[i] += element_universal->getDn_dEta()[2][i] * x[2];
+		dX_dEta[i] += element_universal->getDn_dEta()[3][i] * x[3];
+
+	}
+}
+
+void Jacobian::initDx_DKsi(std::vector<double> x)
+{
+	dX_dKsi = new double[matrix_size];
+	for (int i = 0; i < matrix_size; i++)
+	{
+		dX_dKsi[i] = 0;
+	}
+	for (int i = 0; i < matrix_size; i++)
+	{
+		dX_dKsi[i] += element_universal->getDn_dKsi()[0][i] * x[0];
+		dX_dKsi[i] += element_universal->getDn_dKsi()[1][i] * x[1];
+		dX_dKsi[i] += element_universal->getDn_dKsi()[2][i] * x[2];
+		dX_dKsi[i] += element_universal->getDn_dKsi()[3][i] * x[3];
+
+	}
+}
+/* ******************************************************************** */
+/*
 void Jacobian::initDy_DEta(double y1, double y2, double y3, double y4)
 {
 	dY_dEta = new double[matrix_size];
@@ -243,6 +322,7 @@ void Jacobian::initDx_DKsi(double x1, double x2, double x3,double x4)
 
 	}
 }
+*/
 
 Jacobian::~Jacobian()
 {

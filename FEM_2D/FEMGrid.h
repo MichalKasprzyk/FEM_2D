@@ -4,6 +4,7 @@
 #include "Node_2D.h"
 #include "Element_2D.h"
 #include "Jacobian.h"
+#include <algorithm>
 
 //static Node_2D *nodeArray;
 
@@ -30,7 +31,7 @@ public:
 
 	void generate_local_H();
 	void generate_local_C();
-	void generate_C();
+	void generate_C_H();
 
 	void calculateElementArray_2D();
 	void calculateNodeArray_2D();

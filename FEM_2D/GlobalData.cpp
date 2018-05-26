@@ -118,6 +118,10 @@ void GlobalData::initVector(std::vector< vector<double> > &array, int size)
 
 void GlobalData::printArray(double **array, double columns, double rows, std::string arr_name)
 {
+	if (array == nullptr) {
+		std::cerr << arr_name << " has not been initialized yet" << std::endl;
+		return;
+	}
 	std::cout << std::endl << "Matrix " << arr_name << std::endl << std::endl;
 	std::cout.precision(8);
 	for (int i = 0; i < columns; i++)
@@ -137,6 +141,10 @@ void GlobalData::printArray(double **array, double columns, double rows, std::st
 
 void GlobalData::printArray(double *array, double arr_length, std::string arr_name)
 {
+	if (array == nullptr) {
+		std::cerr << arr_name << " has not been initialized yet" << std::endl;
+		return;
+	}
 	std::cout << std::endl << "Matrix " << arr_name << std::endl << std::endl;
 	std::cout.precision(8);
 	for (int i = 0; i < arr_length; i++)

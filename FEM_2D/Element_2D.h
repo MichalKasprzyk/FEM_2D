@@ -13,7 +13,6 @@ private:
 	//Node nodeArray[4];
 
 
-	int ID[4];
 	int bound_cond[4];
 
 	static int el_id;
@@ -28,6 +27,7 @@ private:
 
 public:
 
+	int ID[4];
 	void init_H();
 	void calculate_H(double** dN_dX, double** dN_dY,double * det_J);
 	void calculate_C(double** N, double* det_J);

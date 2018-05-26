@@ -31,10 +31,10 @@ double Node_2D::getY()
 
 void Node_2D::print()
 {
-	std::cout << " Node_2D id = " << this->iid << std::endl;
-	printf("	x = %4.2f \n ", this->x);
-	printf("	y = %4.2f \n ", this->y);
-	printf("    status = %d \n", this->status);
+	std::cout << "id = " << this->iid;
+	printf(" x = %4.2f", this->x);
+	printf(" y = %4.2f", this->y);
+	printf(" status = %d\n", this->status);
 }
 
 Node_2D::~Node_2D()

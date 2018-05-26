@@ -24,9 +24,13 @@ double** Element_2D::get_H()
 
 void Element_2D::print()
 {
-	std::cout << "Element id = " << this->iid << std::endl;
-	std::cout << this->ID[3] << " " << this->ID[2] << std::endl;
-	std::cout << this->ID[0] << " " << this->ID[1] << std::endl;
+	std::cout << "Element id = " << this->iid << " -> ";
+	for (int i = 0; i < 4; ++i)
+	{
+		std::cout << this->ID[i] << " ";
+	}
+	//std::cout << this->ID[3] << " " << this->ID[2] << std::endl;
+	//std::cout << this->ID[0] << " " << this->ID[1] << std::endl;
 	std::cout << std::endl;
 }
 
@@ -41,10 +45,14 @@ void Element_2D::setId(int i, int j)
 
 
 	// Testing NEW version 0 2 3 1 
-	ID[0] = GlobalData::numberOfNodes_H_2D*i + j;
+	/*ID[0] = GlobalData::numberOfNodes_H_2D*i + j;
 	ID[1] = GlobalData::numberOfNodes_H_2D*(i+1)+j;
 	ID[2] = GlobalData::numberOfNodes_H_2D*(i+1)+(j+1);
-	ID[3] = GlobalData::numberOfNodes_H_2D*i + (j+1);
+	ID[3] = GlobalData::numberOfNodes_H_2D*i + (j+1);*/
+	ID[0] = i + (j*GlobalData::numberOfNodes_H_2D);
+	ID[1] = ID[0] + GlobalData::numberOfNodes_H_2D;
+	ID[2] = ID[1] + 1;
+	ID[3] = ID[0] + 1;
 
 }
 
@@ -81,7 +89,7 @@ void Element_2D::calculate_boundries(double **N,double *det_J)
 
 
 	init_bound_cond();
-	print_boundry();
+	//print_boundry();
 	init_length();
 	vector<double> eta;
 	vector<double> ksi;
@@ -194,8 +202,8 @@ void Element_2D::calculate_boundries(double **N,double *det_J)
 	//TODO Calculate new N Properly..
 	// possiblity change res of N to 4x2?
 
-	GlobalData::printVector1D(ksi, "new Ksi");
-	GlobalData::printVector1D(eta, "new Eta");
+	//GlobalData::printVector1D(ksi, "new Ksi");
+	//GlobalData::printVector1D(eta, "new Eta");
 
 	for (int i = 0; i < 2; i++)
 	{
@@ -218,6 +226,7 @@ void Element_2D::init_length()
 	for (int i = 0; i < matrix_size; i++)
 	{
 		// BE CAREFUL HERE !! set to ID position not i POSITION!!
+		// TODO FIX IT GOD DAMIT
 		//x[ID[i]] = grid->getNode_2D(ID[i])->getX();
 		//y[ID[i]] = grid->getNode_2D(ID[i])->getY();
 		x.push_back(grid->getNode_2D(ID[i])->getX());
@@ -231,10 +240,11 @@ void Element_2D::init_length()
 	}
 	length.push_back(sqrt(pow((x[3] - x[0]), 2) + pow((y[3] - y[0]), 2)));
 
-
-	GlobalData::printVector1D(length, "Length vector");
-	GlobalData::printVector1D(x, " X cords");
-	GlobalData::printVector1D(y, " Y cords");
+	std::cout << std::endl;
+	print();
+	//GlobalData::printVector1D(length, "Length vector of element = " + std::to_string(this->iid));
+	//GlobalData::printVector1D(x, " X cords of element = " + std::to_string(this->iid));
+	//GlobalData::printVector1D(y, " Y cords of element = " + std::to_string(this->iid));
 }
 
 void Element_2D::init_bound_cond()

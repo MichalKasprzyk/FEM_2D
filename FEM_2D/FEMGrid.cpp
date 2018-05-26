@@ -3,79 +3,182 @@
 
 
 
+void FEMGrid::generate_C_H()
+{
+
+	global_C.resize(4 * GlobalData::numberOfNodes_H_2D);
+	global_H.resize(4 * GlobalData::numberOfNodes_H_2D);
+	for (int i = 0; i < global_C.size(); i++)
+	{
+		global_C[i].resize(4 * GlobalData::numberOfNodes_B_2D);
+		global_H[i].resize(4 * GlobalData::numberOfNodes_B_2D);
+	}
+
+	for (int k = 0; k < GlobalData::numberOfElements_2D; k++)
+	{
+		for (int i = 0; i < 4; i++)
+		{
+			for (int j = 0; j < 4; j++)
+			{
+				global_C[elementArray[k].ID[i]][elementArray[k].ID[j]] += elementArray[k].get_C()[i][j];
+				global_H[elementArray[k].ID[i]][elementArray[k].ID[j]] += elementArray[k].get_H()[i][j];
+			}
+		}
+	}
+
+
+
+	GlobalData::printVector(global_H, "Global H");
+	GlobalData::printVector(global_C, "Global C");
+}
+
 void FEMGrid::generate_local_H()
 {
 	// TODO Introduce more elements cmon homie..
-	elementArray[0].calculate_H(jacobian->getdN_dX(), jacobian->getdN_dY(),jacobian->get_det_J());
-	GlobalData::printArray(elementArray[0].get_H(), elementArray[0].get_matrix_size(), elementArray[0].get_matrix_size(), "H local");
+	//elementArray[0].calculate_H(jacobian->getdN_dX(), jacobian->getdN_dY(),jacobian->get_det_J());
+	//GlobalData::printArray(elementArray[0].get_H(), elementArray[0].get_matrix_size(), elementArray[0].get_matrix_size(), "H local");
 
 
 	// Introduced boundary condition on Surface 1 (Hopefully)
-	getNode_2D(0)->setStatus(1); getNode_2D(2)->setStatus(1);
-	getNode_2D(1)->setStatus(1); getNode_2D(3)->setStatus(1);
+	//getNode_2D(0)->setStatus(0); getNode_2D(2)->setStatus(0);
+	//getNode_2D(1)->setStatus(1); getNode_2D(3)->setStatus(1);
+	//getNode_2D(0)->setStatus(1); getNode_2D(4)->setStatus(1);
+	//getNode_2D(1)->setStatus(1); getNode_2D(5)->setStatus(1);
 
 
-
-	elementArray[0].calculate_boundries(jacobian->getElement_universal()->getN(),jacobian->get_det_J());
-	GlobalData::printVector(elementArray[0].get_bound_cond_H()," H boundry condition");
-	elementArray[0].print();
+	//elementArray[0].calculate_boundries(jacobian->getElement_universal()->getN(),jacobian->get_det_J());
+	for (int i = 0; i < GlobalData::numberOfElements_2D; ++i) {
+		elementArray[i].calculate_H(jacobian[i].getdN_dX(), jacobian[i].getdN_dY(), jacobian[i].get_det_J());
+		elementArray[i].calculate_boundries(jacobian[i].getElement_universal()->getN(), jacobian[i].get_det_J());
+	}
+	//elementArray[0].calculate_boundries(jacobian[0].getElement_universal()->getN(), jacobian[0].get_det_J());
+	//GlobalData::printVector(elementArray[0].get_bound_cond_H()," H boundry condition");
+	//elementArray[0].print();
 }
 
 void FEMGrid::generate_local_C()
 {
 	//TODO Fix to make it about more elements
-	elementArray[0].calculate_C(jacobian->getElement_universal()->getN(),jacobian->get_det_J());
-	GlobalData::printVector(elementArray[0].get_C(), " C ");
+	for (int i = 0; i < GlobalData::numberOfElements_2D; ++i) {
+		elementArray[i].calculate_C(jacobian[i].getElement_universal()->getN(), jacobian[i].get_det_J());
+		//GlobalData::printVector(elementArray[i].get_C(), " C ");
+	}
+	/*elementArray[0].calculate_C(jacobian->getElement_universal()->getN(), jacobian->get_det_J());
+	GlobalData::printVector(elementArray[0].get_C(), " C "); */
 }
 void FEMGrid::init_Jacobian()
 {
-	jacobian = new Jacobian();
+	jacobian = new Jacobian[GlobalData::numberOfElements_2D];
+	//jacobian = new Jacobian();
 	generate_Dx_Dksi();
 }
 
 void FEMGrid::generate_Dx_Dksi()
 {
+	
 	// TODO fix that god damn function finally..
 	//getNode_2D(0)->setX(0.0);	getNode_2D(0)->setY(0.0);
 	//getNode_2D(1)->setX(0.025); getNode_2D(1)->setY(0.0);
 	//getNode_2D(2)->setX(0.025); getNode_2D(2)->setY(0.025);
 	//getNode_2D(3)->setX(0.0);	getNode_2D(3)->setY(0.025);
 
-
+	std::cout << "Nodes: " << std::endl;
 	for (int i = 0; i < GlobalData::numberOfNodes_2D; ++i)
 	{
 		getNode_2D(i)->print();
-	}
-	//getNode_2D(0)->print();
-	//getNode_2D(1)->print();
-	//getNode_2D(2)->print();
-	//getNode_2D(3)->print();
-
+	} 
 
 
 	// Possibly change order of points being added, from 1 6 7 2 to 1 2 6 7, not sure though..
 	//jacobian->initDx_DEta(getNode_2D(0)->getX(), getNode_2D(1)->getX(), getNode_2D(2)->getX(), getNode_2D(3)->getX());
-	
+
+
+
+
+
 	//TUTAJ PRACUJEMY OBECNIE UWAGA
 	// bledem jest tutaj kolejnosc przesylania node do jacobiana, przyjmuje zle id stad sa zle wartosci
-	vector< double > y;
-	vector< double > x;
+	// ============!!!!!!!!!!!!!!!!!!!!!!==================
+	// potencjalny blad z liczeniem jacobianow!!!!!!!! UWAGA !!! 
+
+
+	vector<double> x;
+	vector<double> y;
+	vector<double> id_vector;
 
 	for (int i = 0; i < GlobalData::numberOfElements_2D; ++i)
 	{
 		for (int j = 0; j < 4; ++j)
-			y.push_back(getNode_2D(elementArray[i].getNodeID(j))->getY());
-		jacobian->initDx_DEta(getNode_2D(0)->getX(), getNode_2D(1)->getX(), getNode_2D(2)->getX(), getNode_2D(3)->getX());
+		{
+			id_vector.push_back(elementArray[i].get_element_node_ID()[j]);
+
+			// TODO UWAGA, bardzo durny myk z sortowaniem go zeby ID byly wrzucone po kolei i poprawnie liczylo dx_dEta
+			//std::sort(id_vector.begin(), id_vector.end());
+		}
+		//GlobalData::printVector1D(id_vector, "Testowy vector ID");
+
+		for (int j = 0; j < 4; ++j)
+		{
+			x.push_back(getNode_2D(id_vector[j])->getX());
+			y.push_back(getNode_2D(id_vector[j])->getY());
+		}
+		//GlobalData::printVector1D(x, "Testowy vector x");
+		//GlobalData::printVector1D(y, "Testowy vector y");
+
+		std::cout << "Jacobian iteration i = " << i << std::endl;
+		jacobian[i].initDx_DEta(x);
+		jacobian[i].initDx_DKsi(x);
+		jacobian[i].initDy_DEta(y);
+		jacobian[i].initDy_DKsi(y);
+		//GlobalData::printArray(jacobian[i].get_dY_dEta(), jacobian[i].get_matrix_size(), "dY_dEta");
+		//GlobalData::printArray(jacobian[i].get_dX_dKsi(), jacobian[i].get_matrix_size(), "dX_dKsi");
+		//GlobalData::printArray(jacobian[i].get_dX_dEta(), jacobian[i].get_matrix_size(), "dX_dEta");
+		//GlobalData::printArray(jacobian[i].get_dY_dKsi(), jacobian[i].get_matrix_size(), "dY_dKsi");
+
+
+		jacobian[i].calculate_Jacobians();
+		//jacobian[i].print_jacobian();
+		jacobian[i].initDN_Matrixes();
+
+		//GlobalData::printArray(jacobian[i].getdN_dX(), jacobian[i].get_matrix_size(), jacobian[i].get_matrix_size(), "dN_dX");
+		//GlobalData::printArray(jacobian[i].getdN_dY(), jacobian[i].get_matrix_size(), jacobian[i].get_matrix_size(), "dN_dY");
+
+		// clean up for next operation
+		id_vector.clear();
+		x.clear();
+		y.clear();
 	}
 
-	GlobalData::printVector1D(y, "Testowy vector Y");
+	//***************DEBUG PURPOSES******************************
+	/*jacobian[0].print_jacobian();
+	GlobalData::printArray(jacobian[0].get_dY_dEta(), jacobian[0].get_matrix_size(), "dY_dEta");
+	GlobalData::printArray(jacobian[0].get_dX_dKsi(), jacobian[0].get_matrix_size(), "dX_dKsi");
+	GlobalData::printArray(jacobian[0].get_dX_dEta(), jacobian[0].get_matrix_size(), "dX_dEta");
+	GlobalData::printArray(jacobian[0].get_dY_dKsi(), jacobian[0].get_matrix_size(), "dY_dKsi");
+	GlobalData::printArray(jacobian[0].getdN_dX(), jacobian[0].get_matrix_size(), jacobian[0].get_matrix_size(), "dN_dX");
+	GlobalData::printArray(jacobian[0].getdN_dY(), jacobian[0].get_matrix_size(), jacobian[0].get_matrix_size(), "dN_dY"); */
 
-	GlobalData::printArray(jacobian->get_dX_dEta(), jacobian->get_matrix_size(), "dX_dEta");
-	jacobian->initDx_DKsi(getNode_2D(0)->getX(), getNode_2D(1)->getX(), getNode_2D(2)->getX(), getNode_2D(3)->getX());
+	/*for (int i = 0; i < 4; ++i)
+	{
+		//x.push_back(getNode_2D(i)->getX());
+		//y.push_back(getNode_2D(i)->getY());
+	} */
+
+
+	/*jacobian->initDx_DEta(x);
+	jacobian->initDx_DKsi(x);
+	jacobian->initDy_DEta(y);
+	jacobian->initDy_DKsi(y); */
+
+	//jacobian->initDx_DEta(getNode_2D(0)->getX(), getNode_2D(1)->getX(), getNode_2D(2)->getX(), getNode_2D(3)->getX());
+	//jacobian->initDx_DKsi(getNode_2D(0)->getX(), getNode_2D(1)->getX(), getNode_2D(2)->getX(), getNode_2D(3)->getX());
+	//jacobian->initDy_DEta(getNode_2D(0)->getY(), getNode_2D(1)->getY(), getNode_2D(2)->getY(), getNode_2D(3)->getY());
+	//jacobian->initDy_DKsi(getNode_2D(0)->getY(), getNode_2D(1)->getY(), getNode_2D(2)->getY(), getNode_2D(3)->getY());
+
+
+	/*GlobalData::printArray(jacobian->get_dY_dEta(), jacobian->get_matrix_size(), "dY_dEta");
 	GlobalData::printArray(jacobian->get_dX_dKsi(), jacobian->get_matrix_size(), "dX_dKsi");
-	jacobian->initDy_DEta(getNode_2D(0)->getY(), getNode_2D(1)->getY(), getNode_2D(2)->getY(), getNode_2D(3)->getY());
-	GlobalData::printArray(jacobian->get_dY_dEta(), jacobian->get_matrix_size(), "dY_dEta");
-	jacobian->initDy_DKsi(getNode_2D(0)->getY(), getNode_2D(1)->getY(), getNode_2D(2)->getY(), getNode_2D(3)->getY());
+	GlobalData::printArray(jacobian->get_dX_dEta(), jacobian->get_matrix_size(), "dX_dEta");
 	GlobalData::printArray(jacobian->get_dY_dKsi(), jacobian->get_matrix_size(), "dY_dKsi");
 
 
@@ -84,7 +187,7 @@ void FEMGrid::generate_Dx_Dksi()
 	jacobian->initDN_Matrixes();
 
 	GlobalData::printArray(jacobian->getdN_dX(), jacobian->get_matrix_size(), jacobian->get_matrix_size(), "dN_dX");
-	GlobalData::printArray(jacobian->getdN_dY(), jacobian->get_matrix_size(), jacobian->get_matrix_size(), "dN_dY");
+	GlobalData::printArray(jacobian->getdN_dY(), jacobian->get_matrix_size(), jacobian->get_matrix_size(), "dN_dY"); */
 }
 
 void FEMGrid::generaterArray_2D()
@@ -147,7 +250,8 @@ void FEMGrid::calculateElementArray_2D()
 		{
 			for (int i = 0; i < GlobalData::numberOfNodes_H_2D-1; i++)
 			{
-				elementArray[k++].setId(i, j);
+				elementArray[k].setId(i, j);
+				k++;
 			}
 		}
 
