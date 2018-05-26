@@ -17,6 +17,8 @@ private:
 	Node_2D *nodeArray;
 	Element_2D *elementArray;
 	Jacobian *jacobian;
+	vector< vector< double > > global_H;
+	vector< vector< double > > global_C;
 
 
 
@@ -27,6 +29,7 @@ public:
 	void generate_Dx_Dksi();
 
 	void generate_local_H();
+	void generate_local_C();
 	void generate_C();
 
 	void calculateElementArray_2D();

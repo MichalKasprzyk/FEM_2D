@@ -38,6 +38,7 @@ public:
 	void print_boundry();
 	void init_bound_cond();
 	void print();
+	int getNodeID(int index);
 	int getId();
 	double** get_H();
 	int* get_element_node_ID();

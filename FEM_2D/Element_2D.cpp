@@ -213,13 +213,17 @@ void Element_2D::calculate_boundries(double **N,double *det_J)
 
 void Element_2D::init_length()
 {
-	vector< double > x(4);
-	vector< double > y(4);
+	vector< double > x;
+	vector< double > y;
 	for (int i = 0; i < matrix_size; i++)
 	{
 		// BE CAREFUL HERE !! set to ID position not i POSITION!!
-		x[ID[i]] = grid->getNode_2D(ID[i])->getX();
-		y[ID[i]] = grid->getNode_2D(ID[i])->getY();
+		//x[ID[i]] = grid->getNode_2D(ID[i])->getX();
+		//y[ID[i]] = grid->getNode_2D(ID[i])->getY();
+		x.push_back(grid->getNode_2D(ID[i])->getX());
+		y.push_back(grid->getNode_2D(ID[i])->getY());
+		//x[i] = grid->getNode_2D(ID[i])->getX();
+		//y[i] = grid->getNode_2D(ID[i])->getY();
 	}
 	for (int i = 0; i < matrix_size - 1; i++)
 	{
@@ -306,6 +310,11 @@ void Element_2D::calculate_C(double **N,double* det_J)
 		}
 	}
 
+}
+
+int Element_2D::getNodeID(int index)
+{
+	return ID[index];
 }
 
 void Element_2D::print_boundry()

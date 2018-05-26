@@ -21,7 +21,7 @@ void FEMGrid::generate_local_H()
 	elementArray[0].print();
 }
 
-void FEMGrid::generate_C()
+void FEMGrid::generate_local_C()
 {
 	//TODO Fix to make it about more elements
 	elementArray[0].calculate_C(jacobian->getElement_universal()->getN(),jacobian->get_det_J());
@@ -36,19 +36,39 @@ void FEMGrid::init_Jacobian()
 void FEMGrid::generate_Dx_Dksi()
 {
 	// TODO fix that god damn function finally..
-	getNode_2D(0)->setX(0.0);	getNode_2D(0)->setY(0.0);
-	getNode_2D(1)->setX(0.025); getNode_2D(1)->setY(0.0);
-	getNode_2D(2)->setX(0.025); getNode_2D(2)->setY(0.025);
-	getNode_2D(3)->setX(0.0);	getNode_2D(3)->setY(0.025);
+	//getNode_2D(0)->setX(0.0);	getNode_2D(0)->setY(0.0);
+	//getNode_2D(1)->setX(0.025); getNode_2D(1)->setY(0.0);
+	//getNode_2D(2)->setX(0.025); getNode_2D(2)->setY(0.025);
+	//getNode_2D(3)->setX(0.0);	getNode_2D(3)->setY(0.025);
 
 
-	getNode_2D(0)->print();
-	getNode_2D(1)->print();
-	getNode_2D(2)->print();
-	getNode_2D(3)->print();
+	for (int i = 0; i < GlobalData::numberOfNodes_2D; ++i)
+	{
+		getNode_2D(i)->print();
+	}
+	//getNode_2D(0)->print();
+	//getNode_2D(1)->print();
+	//getNode_2D(2)->print();
+	//getNode_2D(3)->print();
+
+
 
 	// Possibly change order of points being added, from 1 6 7 2 to 1 2 6 7, not sure though..
-	jacobian->initDx_DEta(getNode_2D(0)->getX(), getNode_2D(1)->getX(), getNode_2D(2)->getX(), getNode_2D(3)->getX());
+	//jacobian->initDx_DEta(getNode_2D(0)->getX(), getNode_2D(1)->getX(), getNode_2D(2)->getX(), getNode_2D(3)->getX());
+	
+	//TUTAJ PRACUJEMY OBECNIE UWAGA
+	// bledem jest tutaj kolejnosc przesylania node do jacobiana, przyjmuje zle id stad sa zle wartosci
+	vector< double > y;
+	vector< double > x;
+
+	for (int i = 0; i < GlobalData::numberOfElements_2D; ++i)
+	{
+		for (int j = 0; j < 4; ++j)
+			y.push_back(getNode_2D(elementArray[i].getNodeID(j))->getY());
+		jacobian->initDx_DEta(getNode_2D(0)->getX(), getNode_2D(1)->getX(), getNode_2D(2)->getX(), getNode_2D(3)->getX());
+	}
+
+	GlobalData::printVector1D(y, "Testowy vector Y");
 
 	GlobalData::printArray(jacobian->get_dX_dEta(), jacobian->get_matrix_size(), "dX_dEta");
 	jacobian->initDx_DKsi(getNode_2D(0)->getX(), getNode_2D(1)->getX(), getNode_2D(2)->getX(), getNode_2D(3)->getX());
