@@ -2,6 +2,61 @@
 #include "Gauss.h"
 
 
+
+void Gauss::solveVector(std::vector< std::vector < double > > &arr)
+{
+
+	double m;
+
+	double THRESHOLD = 0.000000000000001;
+	double DEBUG;
+	int n, i, j, k;
+
+
+	for (i = 0; i <  arr.size() - 1; i++)
+	{
+		k = i + 1;
+		while (k < arr.size())
+		{
+			m = arr[k][i] / arr[i][i];
+			j = 0;
+			while (j < arr.size())
+			{
+
+				//	DEBUG = tab[k][j];
+				//	printf("i = %d  , k = %d , j = %d \n \n", i, k, j);
+				arr[k][j] = arr[k][j] - m * arr[i][j];
+
+				// DODANY THRESHHOLD UWAGA
+				if (std::abs(arr[k][j]) < THRESHOLD)
+				{
+					arr[k][j] = 0;
+				}
+				//	printf("Subtracting %4.2f - %4.2f * %4.2f = %4.2f  \n \n ", DEBUG, m, tab[i][j], tab[k][j]);
+
+				j++;
+			}
+			//showMatrix(tab, dimension);
+			k++;
+		}
+
+	}
+
+
+
+	double determinant = arr[0][0];
+	for (int i = 1; i < arr.size(); i++)
+	{
+		if(arr[i][i] == 0)
+		{
+			determinant = 0;
+			break;
+		}
+		determinant = determinant * arr[i][i];
+	}
+	//printf(" Its determinant = %4.2f \n", determinant);
+
+}
 double ** Gauss::randomizeArray(int dimension)
 {
 	srand(time(NULL));

@@ -23,6 +23,9 @@ public:
 	static int ro;
 	static int c;
 	static int alfa;
+	static int amb_temp;
+	static int tau_time;
+	static int tau_step_time;
 
 	void print_2D();
 	void readGridFromFile();

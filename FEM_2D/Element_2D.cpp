@@ -12,6 +12,11 @@ Element_2D::Element_2D()
 	el_id++;
 }
 
+vector< double > Element_2D::get_P()
+{
+	return this->local_P;
+}
+
 int Element_2D::get_matrix_size()
 {
 	return matrix_size;
@@ -217,6 +222,16 @@ void Element_2D::calculate_boundries(double **N,double *det_J)
 	}
 
 
+	// Adding H to bound_cond_H
+	for (int i = 0; i < matrix_size; ++i)
+	{
+		for (int j = 0; j < matrix_size; ++j)
+		{
+			local_H[i][j] += bound_cond_H[i][j];
+		}
+	}
+
+
 }
 
 void Element_2D::init_length()
@@ -273,13 +288,25 @@ void Element_2D::init_bound_cond()
 		bound_cond[2] = 1;
 	else
 		bound_cond[2] = 0;
-	if (state3 == state0 && state1 == 1)
+	if (state3 == state0 && state0 == 1)
 		bound_cond[3] = 1;
 	else
 		bound_cond[3] = 0; 
 }
 
 
+void Element_2D::calculate_P()
+{
+	local_P.resize(matrix_size);
+
+	for (int i = 0; i < matrix_size; ++i)
+	{
+		local_P[i] += GlobalData::alfa*GlobalData::GlobalData::amb_temp;
+	}
+
+	std::cout << "Element ID: " << this->iid << std::endl;
+	GlobalData::printVector1D(local_P, " Local P ");
+}
 
 void Element_2D::calculate_H(double** dN_dX, double** dN_dY, double* det_J)
 {
@@ -341,6 +368,7 @@ void Element_2D::print_boundry()
 	}
 	std::cout << " ****** " << std::endl;
 	std::cout << "    " << bound_cond[0] << std::endl;
+
 }
 vector< vector <double> > Element_2D::get_C()
 {

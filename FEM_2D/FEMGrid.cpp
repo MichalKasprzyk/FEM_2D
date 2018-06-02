@@ -3,6 +3,107 @@
 
 
 
+void FEMGrid::addBoundries(vector<int> walls)
+{
+	// Potentially very harmful functions but who cares.. im too dumb for it anyway..
+	// walls in order
+	/*
+			2
+		   __ 
+		1 |  | 3
+		   --
+		   4
+	*/
+	if (walls[3] == 1)
+	{
+		for (int i = 0; i < GlobalData::numberOfNodes_H_2D; ++i)
+		{
+			nodeArray[i].setStatus(1);
+		}
+	}
+	
+	if (walls[2] == 1)
+	{
+		for (int i = GlobalData::numberOfNodes_H_2D - 1; i < GlobalData::numberOfNodes_2D; i += GlobalData::numberOfNodes_B_2D)
+		{
+			nodeArray[i].setStatus(1);
+		}
+	}
+
+	if (walls[1] == 1)
+	{
+		for (int i = GlobalData::numberOfNodes_2D - GlobalData::numberOfNodes_B_2D; i < GlobalData::numberOfNodes_2D; ++i)
+		{
+			nodeArray[i].setStatus(1);
+		}
+	}
+
+	if (walls[0] == 1)
+	{
+		for (int i = 0; i < GlobalData::numberOfNodes_2D; i += GlobalData::numberOfNodes_B_2D)
+		{
+			nodeArray[i].setStatus(1);
+		}
+	}
+
+	std::cout << "Nodes with boundries: " << std::endl;
+	for (int i = 0; i < GlobalData::numberOfNodes_2D; ++i)
+	{
+		nodeArray[i].print();
+	} 
+
+}
+
+void FEMGrid::iteration()
+{
+	// TO DO FIX IT < WARNING > GLOBAL_H COMES WITH BOUND CONDITIONS ALREADY IN PLACE !!!!! !
+	global_sum.resize(4 * GlobalData::numberOfNodes_H_2D);
+	for (int i = 0; i < global_sum.size(); i++)
+	{
+		global_sum[i].resize(4 * GlobalData::numberOfNodes_B_2D);
+	}
+	int i(0);
+
+	for (int i = 0; i < global_sum.size(); ++i)
+	{
+		for (int j = 0; j < global_sum[i].size(); ++j)
+		{
+			global_sum[i][j] = global_H[i][j] + global_C[i][j] / GlobalData::tau_step_time;
+		}
+	}
+
+	//Gauss::solveVector(global_sum);
+
+	GlobalData::printVector(global_sum, " {H} + {C}/dT");
+	while (GlobalData::tau_time >= 0)
+	{
+		std::cout << "============== Iteration " << i << " ==============" << std::endl;
+		
+
+		++i;
+		GlobalData::tau_time = GlobalData::tau_time - GlobalData::tau_step_time;
+	}
+}
+
+
+void FEMGrid::generate_P()
+{
+	// TODO FIX IT 
+	global_P.resize(4 * GlobalData::numberOfNodes_H_2D);
+	for (int i = 0; i < GlobalData::numberOfElements_2D; ++i)
+	{
+		elementArray[i].calculate_P();
+	}
+	for (int i = 0; i < GlobalData::numberOfElements_2D; ++i)
+	{
+		for(int j = 0; j < 4 ; ++j)
+		{
+			global_P[elementArray[i].ID[j]] += elementArray[i].get_P()[j];
+		}
+	}
+	GlobalData::printVector1D(global_P, "Global P");
+}
+
 void FEMGrid::generate_C_H()
 {
 
@@ -45,20 +146,39 @@ void FEMGrid::generate_local_H()
 	//getNode_2D(0)->setStatus(1); getNode_2D(4)->setStatus(1);
 	//getNode_2D(1)->setStatus(1); getNode_2D(5)->setStatus(1);
 
+	// REKTORSKIE PRZEROBKI 
+
+	/*getNode_2D(0)->setX(0);
+	getNode_2D(4)->setX(0.333333);
+	getNode_2D(5)->setX(0.333333);
+	getNode_2D(1)->setX(0);
+
+	getNode_2D(0)->setY(0);
+	getNode_2D(4)->setY(0);
+	getNode_2D(5)->setY(0.333333);
+	getNode_2D(1)->setY(0.333333); */
+
+
+
+	addBoundries({ 1,1,1,1 });
 
 	//elementArray[0].calculate_boundries(jacobian->getElement_universal()->getN(),jacobian->get_det_J());
 	for (int i = 0; i < GlobalData::numberOfElements_2D; ++i) {
+		elementArray[i].init_bound_cond();
+		//elementArray[i].print_boundry();
 		elementArray[i].calculate_H(jacobian[i].getdN_dX(), jacobian[i].getdN_dY(), jacobian[i].get_det_J());
-		elementArray[i].calculate_boundries(jacobian[i].getElement_universal()->getN(), jacobian[i].get_det_J());
+		elementArray[i].calculate_boundries(jacobian[i].getElement_universal()->getN(), jacobian[i].get_det_J());    
 	}
+
+
+
+
 	//elementArray[0].calculate_boundries(jacobian[0].getElement_universal()->getN(), jacobian[0].get_det_J());
-	//GlobalData::printVector(elementArray[0].get_bound_cond_H()," H boundry condition");
-	//elementArray[0].print();
+
 }
 
 void FEMGrid::generate_local_C()
 {
-	//TODO Fix to make it about more elements
 	for (int i = 0; i < GlobalData::numberOfElements_2D; ++i) {
 		elementArray[i].calculate_C(jacobian[i].getElement_universal()->getN(), jacobian[i].get_det_J());
 		//GlobalData::printVector(elementArray[i].get_C(), " C ");

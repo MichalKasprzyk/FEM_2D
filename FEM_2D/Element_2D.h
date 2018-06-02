@@ -22,6 +22,7 @@ private:
 	
 	const int matrix_size = 4;
 	vector< vector <double> > matrix_C;
+	vector< double > local_P;
 	vector< vector <double> > bound_cond_H;
 	vector< double > length;
 
@@ -31,6 +32,9 @@ public:
 	void init_H();
 	void calculate_H(double** dN_dX, double** dN_dY,double * det_J);
 	void calculate_C(double** N, double* det_J);
+	void calculate_P();
+
+
 	void calculate_boundries(double **N,double* det_J);
 
 
@@ -42,6 +46,7 @@ public:
 	int getId();
 	double** get_H();
 	int* get_element_node_ID();
+	vector< double > get_P();
 	vector< vector <double> > get_C();
 	vector< vector <double> > get_bound_cond_H();
 	int get_matrix_size();

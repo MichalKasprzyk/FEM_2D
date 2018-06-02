@@ -16,6 +16,9 @@ double GlobalData::k = 0;
 int GlobalData::c = 0;
 int GlobalData::ro = 0;
 int GlobalData::alfa = 0;
+int GlobalData::amb_temp = 1200;
+int GlobalData::tau_step_time = 50; // also seconds
+int GlobalData::tau_time = 500; // given in seconds
 
 
 GlobalData::GlobalData()
@@ -102,6 +105,9 @@ void GlobalData::print_2D()
 	std::cout << "c = " << this->c << std::endl;
 	std::cout << "ro = " << this->ro << std::endl;
 	std::cout << "alfa = " << this->alfa << std::endl;
+	std::cout << "amb temp = " << this->amb_temp << std::endl;
+	std::cout << "tau_time = " << this->tau_time<< std::endl;
+	std::cout << "tau_step_time = " << this->tau_step_time << std::endl;
 	std::cout << "============================" << std::endl;
 }
 

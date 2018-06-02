@@ -5,4 +5,4 @@ H 4
 k 25
 c 700
 ro 7800
-alfa 25
+alfa 300
