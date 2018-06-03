@@ -60,7 +60,7 @@ public:
 		std::cout.precision(8);
 		for (int i = 0; i<array.size(); i++)
 		{
-			if (array[i]<0)
+			if (array[i] < 0)
 				std::cout << std::left << "   " << array[i];
 			else
 				std::cout << std::left << "    " << array[i];

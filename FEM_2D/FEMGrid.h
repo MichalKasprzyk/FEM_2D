@@ -23,6 +23,8 @@ private:
 	vector< vector< double > > global_C;
 	vector< vector< double > > global_sum;
 	vector< double > global_P;
+	vector< double > temp_0;
+	vector< double > temp_1;
 
 
 
@@ -30,12 +32,15 @@ private:
 public:
 
 	void init_Jacobian();
+	void init_temp();
 	void generate_Dx_Dksi();
 
+
+	void recalculateP();
 	void generate_local_H();
 	void generate_local_C();
 	void generate_C_H();
-	void generate_P();
+	void generate_P(bool test);
 	void iteration();
 
 

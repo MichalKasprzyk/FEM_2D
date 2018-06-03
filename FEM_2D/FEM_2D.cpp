@@ -38,7 +38,8 @@ int main()
 	grid->generate_local_H();
 	grid->generate_local_C();
 	grid->generate_C_H();
-	grid->generate_P();
+	grid->init_temp();
+	//grid->generate_P();
 
 	grid->iteration();
 

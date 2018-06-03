@@ -91,7 +91,8 @@ void Element_2D::calculate_boundries(double **N,double *det_J)
 	//Careful about which nodes have heat condition in them
 	GlobalData::initVector(bound_cond_H, matrix_size);
 
-
+	n1_new.resize(matrix_size);
+	n2_new.resize(matrix_size);
 
 	init_bound_cond();
 	//print_boundry();
@@ -122,6 +123,9 @@ void Element_2D::calculate_boundries(double **N,double *det_J)
 		{
 			n1[i] = 0.25*(1 - ksi[i])*(1 - eta[i]);
 			n2[i] = 0.25*(1 + ksi[i])*(1 - eta[i]);
+
+			n1_new[0] = n1[i];
+			n2_new[0] = n2[i];
 		}
 		for (int i = 0; i < n1.size(); i++)
 		{
@@ -145,6 +149,9 @@ void Element_2D::calculate_boundries(double **N,double *det_J)
 		{
 			n1[i] = 0.25*(1 + ksi[i])*(1 - eta[i]);
 			n2[i] = 0.25*(1 + ksi[i])*(1 + eta[i]);
+
+			n1_new[1] = n1[i];
+			n2_new[1] = n2[i];
 		}
 
 		for (int i = 0; i < n1.size(); i++)
@@ -168,6 +175,9 @@ void Element_2D::calculate_boundries(double **N,double *det_J)
 		{
 			n1[i] = 0.25*(1 + ksi[i])*(1 + eta[i]);
 			n2[i] = 0.25*(1 - ksi[i])*(1 + eta[i]);
+
+			n1_new[2] = n1[i];
+			n2_new[2] = n2[i];
 		}
 
 		for (int i = 0; i < n1.size(); i++)
@@ -192,6 +202,9 @@ void Element_2D::calculate_boundries(double **N,double *det_J)
 		{
 			n1[i] = 0.25*(1 - ksi[i])*(1 - eta[i]);
 			n2[i] = 0.25*(1 - ksi[i])*(1 + eta[i]);
+
+			n1_new[3] = n1[i];
+			n2_new[3] = n2[i];
 		}
 
 		for (int i = 0; i < n2.size(); i++)
@@ -295,17 +308,26 @@ void Element_2D::init_bound_cond()
 }
 
 
-void Element_2D::calculate_P()
+void Element_2D::calculate_P(double* det_J)
 {
+	local_P.clear();
 	local_P.resize(matrix_size);
 
-	for (int i = 0; i < matrix_size; ++i)
-	{
-		local_P[i] += GlobalData::alfa*GlobalData::GlobalData::amb_temp;
-	}
 
-	std::cout << "Element ID: " << this->iid << std::endl;
-	GlobalData::printVector1D(local_P, " Local P ");
+	//double delta = GlobalData::b_2D / GlobalData::numberOfNodes_B_2D;      // Possibly wrong delta
+
+	for (int i = 0; i < matrix_size; ++i)
+	{ 
+		/*for (int j = 0; j < matrix_size; ++j) {
+			//local_P[i] += bound_cond_H[i][j];
+		} */
+		//local_P[i] = local_P[i] * GlobalData::alfa * GlobalData::GlobalData::amb_temp * length[i];//delta/2; //matrix_C[i][j]; 0.25*(1 + ksi[i])*(1 + eta[i]) ??
+		local_P[i] += (n1_new[i] + n2_new[i]) * GlobalData::alfa * GlobalData::amb_temp * length[i];
+		
+		//GlobalData::alfa*GlobalData::GlobalData::amb_temp
+	}
+	//std::cout << "Element ID: " << this->iid;
+	//GlobalData::printVector1D(local_P, " Local P ");
 }
 
 void Element_2D::calculate_H(double** dN_dX, double** dN_dY, double* det_J)

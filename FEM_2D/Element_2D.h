@@ -25,6 +25,8 @@ private:
 	vector< double > local_P;
 	vector< vector <double> > bound_cond_H;
 	vector< double > length;
+	vector< double > n1_new;
+	vector< double > n2_new; 
 
 public:
 
@@ -32,7 +34,7 @@ public:
 	void init_H();
 	void calculate_H(double** dN_dX, double** dN_dY,double * det_J);
 	void calculate_C(double** N, double* det_J);
-	void calculate_P();
+	void calculate_P(double * det_J);
 
 
 	void calculate_boundries(double **N,double* det_J);
