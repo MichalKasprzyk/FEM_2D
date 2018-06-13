@@ -34,6 +34,10 @@ public:
 	static void printArray(double *array, double arr_length, std::string arr_name);
 	static void printArray(double **array, double columns, double rows, std::string arr_name);
 
+	static void findMinMax(std::vector< double > tempVector, double &MAX, double &MIN);
+
+
+
 	template<typename T>
 	static void printVector(const std::vector< std::vector<T> > array, std::string arr_name)
 	{

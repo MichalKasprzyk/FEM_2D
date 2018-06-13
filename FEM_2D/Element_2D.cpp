@@ -322,8 +322,10 @@ void Element_2D::calculate_P(double* det_J)
 			//local_P[i] += bound_cond_H[i][j];
 		} */
 		//local_P[i] = local_P[i] * GlobalData::alfa * GlobalData::GlobalData::amb_temp * length[i];//delta/2; //matrix_C[i][j]; 0.25*(1 + ksi[i])*(1 + eta[i]) ??
-		local_P[i] += (n1_new[i] + n2_new[i]) * GlobalData::alfa * GlobalData::amb_temp * length[i];
 		
+		// Careful about calculating this local_P, should be 
+		// d
+		local_P[i] += (n1_new[i] + n2_new[i]) * GlobalData::alfa * GlobalData::amb_temp * length[i];
 		//GlobalData::alfa*GlobalData::GlobalData::amb_temp
 	}
 	//std::cout << "Element ID: " << this->iid;

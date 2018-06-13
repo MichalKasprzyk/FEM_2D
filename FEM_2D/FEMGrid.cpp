@@ -5,13 +5,37 @@
 
 void FEMGrid::init_temp()
 {
-	temp_0.resize(4 * GlobalData::numberOfNodes_H_2D);
-	temp_1.resize(4 * GlobalData::numberOfNodes_H_2D);
+	//temp_0.resize(4 * GlobalData::numberOfNodes_H_2D);
+	//temp_1.resize(4 * GlobalData::numberOfNodes_H_2D);
+	
+	temp_0.resize(GlobalData::numberOfNodes_2D);
+	temp_1.resize(GlobalData::numberOfNodes_2D);
+	
 	for (int i = 0; i < temp_0.size(); i++)
 	{
 		// Global temperature vector, by default for the task it is set to 100 C 
 		temp_0[i] = 100;
 	}
+
+	        /*                                                
+		    temp_0[0] = 365.81547;
+			temp_0[1] = 249.01534;
+			temp_0[2] = 249.01534;
+			temp_0[3] = 365.81547;
+			temp_0[4] = 249.01534;
+			temp_0[5] = 110.03798;
+			temp_0[6] = 110.03798;
+			temp_0[7] = 249.01534;
+			temp_0[8] = 249.01534;
+			temp_0[9] = 110.03798;
+			temp_0[10] = 110.03798;
+			temp_0[11] = 249.01534;
+			temp_0[12] = 365.81547;
+			temp_0[13] = 249.01534;
+			temp_0[14] = 249.01534;
+			temp_0[15] = 365.81547; 
+			*/
+	
 
 }
 
@@ -68,7 +92,8 @@ void FEMGrid::addBoundries(vector<int> walls)
 }
 
 void FEMGrid::recalculateP() {
-	global_P.resize(4 * GlobalData::numberOfNodes_H_2D);
+	//global_P.resize(4 * GlobalData::numberOfNodes_H_2D);
+	global_P.resize(GlobalData::numberOfNodes_2D);
 		for (int i = 0; i < GlobalData::numberOfElements_2D; ++i)
 	{
 		for(int j = 0; j < 4 ; ++j)
@@ -92,10 +117,12 @@ void FEMGrid::iteration()
 {
 	// TO DO FIX IT < WARNING > GLOBAL_H COMES WITH BOUND CONDITIONS ALREADY IN PLACE !!!!! !
 
-	global_sum.resize(4 * GlobalData::numberOfNodes_H_2D);
+	//global_sum.resize(4 * GlobalData::numberOfNodes_H_2D);
+	global_sum.resize(GlobalData::numberOfNodes_2D);
 	for (int i = 0; i < global_sum.size(); i++)
 	{
-		global_sum[i].resize(4 * GlobalData::numberOfNodes_B_2D);
+		//global_sum[i].resize(4 * GlobalData::numberOfNodes_B_2D);
+		global_sum[i].resize(GlobalData::numberOfNodes_2D);
 	}
 	int i(0);
 
@@ -112,15 +139,22 @@ void FEMGrid::iteration()
 	//GlobalData::printVector1D(temp_1, "Pierwsza iteracja, hopefully dzialajaca");
 	//temp_1 = Gauss::gauss(global_sum,global_P);
 	bool test = false;
-	while (i!=2) //GlobalData::tau_time >= 0	
+	double MAX(0);
+	double MIN(0);
+	while (GlobalData::tau_time>0) //GlobalData::tau_time >= 0	
 	{
+
 		std::cout << "============== Iteration " << i << " ==============" << std::endl;
-		GlobalData::printVector(global_sum, " {H} + {C}/dT");
+		//GlobalData::printVector(global_sum, " {H} + {C}/dT");
 		//recalculateP();
 		generate_P(test);
-		temp_0 = Gauss::gauss(global_sum, global_P);
+		//temp_0 = Gauss::gauss(global_sum, global_P);
+		temp_0 = Gauss::gaussMagdy(global_sum, global_P);
 		test = true;
-		GlobalData::printVector1D(temp_0, "Temperature vector");
+		//GlobalData::printVector1D(temp_0, "Temperature vector");
+		GlobalData::findMinMax(temp_0, MAX, MIN);
+
+		std::cout << "MAX = " << MAX << " MIN = " << MIN << std::endl;
 		++i;
 		global_P.clear();
 
@@ -132,7 +166,8 @@ void FEMGrid::iteration()
 void FEMGrid::generate_P(bool test)
 {
 	// TODO FIX IT 
-	global_P.resize(4 * GlobalData::numberOfNodes_H_2D);
+	//global_P.resize(4 * GlobalData::numberOfNodes_H_2D);
+	global_P.resize(GlobalData::numberOfNodes_2D);
 	if(test == false)
 		for (int i = 0; i < GlobalData::numberOfElements_2D; ++i)
 		{
@@ -143,34 +178,42 @@ void FEMGrid::generate_P(bool test)
 	{
 		for(int j = 0; j < 4 ; ++j)
 		{
-			global_P[elementArray[i].ID[j]] += elementArray[i].get_P()[j];
+		
 			//std::cout << " Adding element " << i << " with ID[" << j << "] = " << elementArray[i].ID[j] << " of value = " << elementArray[i].get_P()[j] << std::endl;
-		}
-		GlobalData::printVector1D(elementArray[i].get_P(), "P local test");
+			global_P[elementArray[i].ID[j]] += elementArray[i].get_P()[j];
+		}	
+		//GlobalData::printVector1D(elementArray[i].get_P(), "P local test");
 	}
 
 	for (int i = 0; i < GlobalData::numberOfNodes_2D; ++i)
 	{
 		double test = 0;
 		for(int j = 0; j < global_C[i].size(); ++j)
-			test += (global_C[i][j] / GlobalData::tau_step_time) * temp_0[i];
+			test += (global_C[i][j] / GlobalData::tau_step_time) * temp_0[j];
 		global_P[i] += test;
-		std::cout << "Global data tau step time = " << GlobalData::tau_step_time << std::endl;
+		//std::cout << "Global data tau step time = " << GlobalData::tau_step_time << std::endl;
 	}  
-	GlobalData::printVector1D(global_P, "Global P");
-	GlobalData::printVector(global_C, "Global C");
-	GlobalData::printVector1D(temp_0, "Temp test");
+	//GlobalData::printVector1D(global_P, "Global P");
+	//GlobalData::printVector(global_C, "Global C");
+	//GlobalData::printVector1D(temp_0, "Temp test");
 }
 
 void FEMGrid::generate_C_H()
 {
 
-	global_C.resize(4 * GlobalData::numberOfNodes_H_2D);
-	global_H.resize(4 * GlobalData::numberOfNodes_H_2D);
+	//global_C.resize(4 * GlobalData::numberOfNodes_H_2D);
+	//global_H.resize(4 * GlobalData::numberOfNodes_H_2D);
+
+	global_C.resize(GlobalData::numberOfNodes_2D);
+	global_H.resize(GlobalData::numberOfNodes_2D);
+
 	for (int i = 0; i < global_C.size(); i++)
 	{
-		global_C[i].resize(4 * GlobalData::numberOfNodes_B_2D);
-		global_H[i].resize(4 * GlobalData::numberOfNodes_B_2D);
+		//global_C[i].resize(4 * GlobalData::numberOfNodes_B_2D);
+		//global_H[i].resize(4 * GlobalData::numberOfNodes_B_2D);
+	
+		global_C[i].resize(GlobalData::numberOfNodes_2D);
+		global_H[i].resize(GlobalData::numberOfNodes_2D);
 	}
 
 	for (int k = 0; k < GlobalData::numberOfElements_2D; k++)
@@ -188,7 +231,7 @@ void FEMGrid::generate_C_H()
 
 
 	//GlobalData::printVector(global_H, "Global H");
-	GlobalData::printVector(global_C, "Global C");
+	//GlobalData::printVector(global_C, "Global C");
 }
 
 void FEMGrid::generate_local_H()

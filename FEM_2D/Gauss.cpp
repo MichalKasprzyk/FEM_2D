@@ -2,6 +2,38 @@
 #include "Gauss.h"
 
 
+std::vector<double> Gauss::gaussMagdy(std::vector<std::vector<double> > Hprim, std::vector< double > P)
+{
+	int nn = Hprim.size();
+	for (int i = 0; i < nn - 1; i++)
+	{
+		//std::cout << " ---- MAGDUS <3 GAUSS ITERATION LOOP 1 ---- " << i << std::endl;
+		for (int j = i + 1; j < nn; j++)
+		{
+			double l = Hprim[j][i] / Hprim[i][i];
+			P[j] -= P[i] * l;
+			for (int k = 0; k < nn; k++)
+			{
+				Hprim[j][k] -= Hprim[i][k] * l;
+			}
+		}
+	}
+
+	//double* t = new double[nn];
+	std::vector<double> t;
+	t.resize(nn);
+	for (int j = nn - 1; j >= 0; j--)
+	{
+		//std::cout << " ---- MAGDUS <3 GAUSS ITERATION LOOP 2 ---- " << j << std::endl;
+		t[j] = P[j]; //tu byl minus.. po co?
+		for (int k = j + 1; k < nn; k++)
+		{
+			t[j] -= Hprim[j][k] * t[k];
+		}
+		t[j] /= Hprim[j][j];
+	}
+	return t;
+}
 
 void Gauss::solveVector(std::vector< std::vector < double > > &arr)
 {
@@ -15,6 +47,7 @@ void Gauss::solveVector(std::vector< std::vector < double > > &arr)
 
 	for (i = 0; i <  arr.size() - 1; i++)
 	{
+		std::cout << "    --- GAUSS ITERATION --- " << i << std::endl;
 		k = i + 1;
 		while (k < arr.size())
 		{
@@ -158,7 +191,7 @@ void Gauss::print(std::vector< std::vector<double> > A) {
 	std::cout << std::endl;
 }
 
-std::vector<double> Gauss::gauss(const std::vector< std::vector<double> > A1, std::vector<double> B) {
+std::vector<double> Gauss::gauss( const std::vector< std::vector<double> > &A1, std::vector<double> B) {
 	
 	
 	//GlobalData::printVector(A, "Test from GAUSS A");
@@ -180,6 +213,7 @@ std::vector<double> Gauss::gauss(const std::vector< std::vector<double> > A1, st
 
 	for (int i = 0; i<n; i++) {
 		// Search for maximum in this column
+		//std::cout << "    --- GAUSS ITERATION --- " << i << std::endl;
 		double maxEl = abs(A[i][i]);
 		int maxRow = i;
 		for (int k = i + 1; k<n; k++) {

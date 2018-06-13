@@ -17,8 +17,8 @@ int GlobalData::c = 0;
 int GlobalData::ro = 0;
 int GlobalData::alfa = 0;
 int GlobalData::amb_temp = 1200;
-int GlobalData::tau_step_time = 50; // also seconds
-int GlobalData::tau_time = 500; // given in seconds
+int GlobalData::tau_step_time = 1; // also seconds
+int GlobalData::tau_time = 100; // given in seconds
 
 
 GlobalData::GlobalData()
@@ -120,6 +120,20 @@ void GlobalData::initVector(std::vector< vector<double> > &array, int size)
 	}
 }
 
+
+void GlobalData::findMinMax(std::vector<double> tempVector, double &MAX, double &MIN)
+{
+	MAX = tempVector[0];
+	MIN = tempVector[0];
+	for (int i = 0; i < tempVector.size()-1; ++i)
+	{
+		if (MAX < tempVector[i + 1])
+			MAX = tempVector[i + 1];
+
+		if (MIN > tempVector[i + 1])
+			MIN = tempVector[i + 1];
+	}
+}
 
 
 void GlobalData::printArray(double **array, double columns, double rows, std::string arr_name)
